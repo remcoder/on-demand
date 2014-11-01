@@ -1,0 +1,37 @@
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Film1 On Demand</title>
+</head>
+
+<body>
+  <h1>Film1 On Demand</h1>
+
+  {{> movieList}}
+</body>
+
+<template name="movieList">
+    {{#each movies}}
+        {{> movieItem }}
+    {{/each}}
+</template>
+
+<template name="movieItem">
+    <tr>
+        <td valign="middle">{{imdb.rating}}</td>
+        <td>
+            <img src="http://www.film1.nl/{{cover}}"/>
+        </td>
+        <td valign="top">
+            <h2 style="margin:0"><a href="http://www.film1.nl/{{url}}">{{title}}</a></h2>
+            {{when}}<br/><br/>
+            {{desc}}<br/><br/>
+            {{duration}}<br/><br/>
+            {{#each icons}}
+                <img src="http://www.film1.nl/{{.}}" />
+            {{/each}}
+            <br/>
+            <a href="http://www.film1.nl/{{trailer}}">trailer</a><br/>
+        </td>
+
+    </tr>
+</template>
