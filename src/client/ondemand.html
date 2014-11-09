@@ -5,14 +5,33 @@
 
 <body>
   <h1>Film1 On Demand</h1>
-
+  {{> harvest}}
+  {{> genres}}
   {{> movieList}}
 </body>
 
+<template name="genres">
+    <select name=genre>
+        <option></option>
+        {{#each genres}}
+            <option>{{name}}</option>
+        {{/each}}
+    </select>
+</template>
+
+<template name="harvest">
+    {{#with harvest}}
+        <div>last updated {{lastUpdated .}}</div>
+    {{/with}}
+</template>
+
 <template name="movieList">
-    {{#each movies}}
-        {{> movieItem }}
-    {{/each}}
+    {{#with movies}}
+        <div>total {{count .}} movies</div>
+        {{#each .}}
+            {{> movieItem }}
+        {{/each}}
+    {{/with}}
 </template>
 
 <template name="movieItem">
@@ -23,11 +42,14 @@
         </td>
         <td valign="top">
             <h2 style="margin:0"><a href="http://www.film1.nl/{{url}}">{{title}}</a></h2>
-            {{when}}<br/><br/>
+            <!-- {{when}}<br/><br/> -->
             {{desc}}<br/><br/>
             {{duration}}<br/><br/>
+            {{#each genres}}
+                <a href="http://www.film1.nl{{url}}">{{name}}</a>
+            {{/each }}<br/>
             {{#each icons}}
-                <img src="http://www.film1.nl/{{.}}" />
+                <img class="icon" src="http://www.film1.nl/{{.}}" />
             {{/each}}
             <br/>
             <a href="http://www.film1.nl/{{trailer}}">trailer</a><br/>

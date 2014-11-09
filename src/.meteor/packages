@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 http
 meteorhacks:npm
@@ -12,4 +11,5 @@ meteorhacks:npm
 
 npm-container
 underscore
+mrt:moment
 
