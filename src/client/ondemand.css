@@ -1,1 +1,19 @@
-/* try this theme http://bootswatch.com/cyborg/ */
+.movie-list {
+    padding: 50px 10px 0px 10px;
+    overflow-x: hidden;
+}
+
+.movie-item {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #444;
+}
+
+h3 a {
+    color: white;
+}
+
+.genre-icon {
+    background-color: #ccc;
+    width: 24px;
+    height: 24px;
+}

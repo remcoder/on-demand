@@ -1,64 +1,119 @@
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Film1 On Demand aanbod gesorteerd op IMDB score</title>
 </head>
 
 <body>
-  <h1>Film1 On Demand - gesorteerd op IMDB score</h1>
+  <!-- <h1>Film1 On Demand - gesorteerd op IMDB score</h1>
   {{> harvest}}
   {{> genres}}
-  {{> fullTextSearch}}
+  {{> fullTextSearch}} -->
+
+      <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Film1 On Demand</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          {{>fullTextSearch }}
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              {{> genres}}
+            </li>
+          </ul>
+        </div>
+
+      </nav>
+
   {{> movieList}}
 </body>
 
 <template name="fullTextSearch">
-    <input type=search incremental autofocus placeholder="zoek op titel" value="{{value}}" />
+  <form class="navbar-form navbar-left" role="search">
+    <div class="form-group">
+      <input type=search
+        class="form-control"
+        incremental
+        autofocus
+        placeholder="zoek op titel"
+        value="{{value}}" />
+    </div>
+  </form>
 </template>
 
+<!-- <template name="genres">
+  <select name=genre>
+    <option></option>
+    {{#each genres}}
+      <option>{{name}}</option>
+    {{/each}}
+  </select>
+</template> -->
+
 <template name="genres">
-    <select name=genre>
-        <option></option>
-        {{#each genres}}
-            <option>{{name}}</option>
-        {{/each}}
-    </select>
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    {{dropdownTitle}}
+    <strong class="caret"></strong>
+  </a>
+  <ul class="dropdown-menu">
+    {{#each genres}}
+      <li class="{{#if isActive . }}active{{/if}}">
+        <a href="#">{{name}}</a>
+      </li>
+    {{/each}}
+  </ul>
 </template>
 
 <template name="harvest">
-    {{#with harvest}}
-        <div>laatste update: {{lastUpdated .}}</div>
-    {{/with}}
+  {{#with harvest}}
+    <div>laatste update: {{lastUpdated .}}</div>
+  {{/with}}
 </template>
 
 <template name="movieList">
+  <div class="movie-list">
     {{#with movies}}
-        <div>totaal {{count .}} films</div>
-        {{#each .}}
-            {{> movieItem }}
-        {{/each}}
+      <!-- <div>totaal {{count .}} films</div> -->
+      {{#each .}}
+        {{> movieItem }}
+      {{/each}}
     {{/with}}
+  </div>
 </template>
 
 <template name="movieItem">
-    <tr>
-        <td valign="middle">{{imdb.rating}}</td>
-        <td>
-            <img src="http://www.film1.nl/{{cover}}"/>
-        </td>
-        <td valign="top">
-            <h2 style="margin:0"><a href="http://www.film1.nl/{{url}}">{{title}}</a></h2>
-            <!-- {{when}}<br/><br/> -->
-            {{desc}}<br/><br/>
-            {{duration}}<br/><br/>
-            {{#each genres}}
-                <a href="http://www.film1.nl{{url}}">{{name}}</a>
-            {{/each }}<br/>
-            {{#each icons}}
-                <img class="icon" src="http://www.film1.nl/{{.}}" />
-            {{/each}}
-            <br/>
-            <a href="http://www.film1.nl/{{trailer}}">trailer</a><br/>
-        </td>
+  <div class="row clearfix movie-item">
+    <div class="col-md-12 column">
+      <h3><a href="http://www.film1.nl/{{url}}">{{title}}</a></h3>
+    </div>
 
-    </tr>
+    <div class="col-md-5 col-xs-6 column">
+      <p class="xtext-center">
+        <img src="http://www.film1.nl/{{cover}}"/>
+      </p>
+    </div>
+
+    <div class="col-md-5 col-xs-6 column">
+     <p class="xtext-center">
+        IMDB <span class="badge">{{imdb.rating}}</span> <br/>
+        {{#each genres}}
+          <a href="http://www.film1.nl{{url}}">{{name}}</a>
+        {{/each }}<br/>
+        {{duration}}<br/>
+        {{#each icons}}
+          <img class="genre-icon" src="http://www.film1.nl/{{.}}" />
+        {{/each}} <br/>
+
+        <a href="http://www.film1.nl/{{trailer}}">trailer</a><br/>
+      </p>
+    </div>
+
+    <div class="col-md-12 col-xs-12 column">
+      <p>{{desc}}</p>
+    </div>
+
+
+  </div>
 </template>

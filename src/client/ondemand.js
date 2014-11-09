@@ -32,10 +32,32 @@ Template.genres.helpers({
         return Genres.find({}, {
             sort: { name: 1 }
         });
+    },
+
+    isActive : function(genre) {
+        return genre.name == Session.get('genre');
+    },
+
+    dropdownTitle : function() {
+      return Session.get('genre') || 'Genre';
     }
 });
 
+Template.genres.rendered = function() {
+    $('.navbar .dropdown [data-toggle=dropdown]').dropdown();
+}
+
 Template.genres.events({
+    'click .dropdown-menu a' : function(evt) {
+        evt.preventDefault();
+        var value = $(evt.currentTarget).text();
+        console.log(value);
+        if (Session.get('genre') == value)
+            Session.set('genre', null);
+        else
+            Session.set('genre', value);
+    },
+
     'change [name=genre]' : function(evt) {
         var value = $(evt.currentTarget).find("option:selected" ).text()
         console.log(value);
@@ -55,8 +77,11 @@ function setFullTextSearch(evt) {
         Session.set('fullTextSearch' , value);
     }
 
+function preventDefault(evt) { evt.preventDefault(); }
+
 Template.fullTextSearch.events({
-    'search [type=search]' : setFullTextSearch
+    'search [type=search]' : setFullTextSearch,
+    'submit form' : preventDefault
 });
 
 Template.harvest.helpers({
