@@ -1,14 +1,19 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Film1 On Demand movies sorted by IMDB rating</title>
+  <title>Film1 On Demand aanbod gesorteerd op IMDB score</title>
 </head>
 
 <body>
-  <h1>Film1 On Demand - sorted by IMDB rating</h1>
+  <h1>Film1 On Demand - gesorteerd op IMDB score</h1>
   {{> harvest}}
   {{> genres}}
+  {{> fullTextSearch}}
   {{> movieList}}
 </body>
+
+<template name="fullTextSearch">
+    <input type=search incremental autofocus placeholder="zoek op titel" value="{{value}}" />
+</template>
 
 <template name="genres">
     <select name=genre>
@@ -21,7 +26,7 @@
 
 <template name="harvest">
     {{#with harvest}}
-        <div>last updated {{lastUpdated .}}</div>
+        <div>laatste update {{lastUpdated .}}</div>
     {{/with}}
 </template>
 

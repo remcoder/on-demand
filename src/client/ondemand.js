@@ -6,8 +6,14 @@ Meteor.startup(function() {
 
 Template.movieList.helpers({
     movies: function() {
+        var filter = {};
+
         var genre = Session.get('genre');
-        var filter = genre ? { 'genres.name': genre} : {};
+        if (genre)
+            _.extend(filter, { 'genres.name': genre });
+        var fullTextSearch = Session.get('fullTextSearch');
+        if (fullTextSearch)
+            _.extend(filter, { title: new RegExp(fullTextSearch,'i') });
         console.log(filter);
         return Movies.find(filter, {
             sort: [ ['imdb.rating', 'desc'], 'title']
@@ -33,6 +39,22 @@ Template.genres.events({
         console.log(value);
         Session.set('genre', value);
     }
+});
+
+Template.fullTextSearch.helpers({
+    value : function() {
+        return Session.get('fullTextSearch');
+    }
+});
+
+function setFullTextSearch(evt) {
+        var value = $(evt.currentTarget).val();
+        console.log(value);
+        Session.set('fullTextSearch' , value);
+    }
+
+Template.fullTextSearch.events({
+    'search [type=search]' : setFullTextSearch
 });
 
 Template.harvest.helpers({
