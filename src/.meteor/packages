@@ -12,4 +12,5 @@ meteorhacks:npm
 npm-container
 underscore
 mrt:moment
+meteorhacks:fast-render
 
