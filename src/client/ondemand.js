@@ -16,7 +16,7 @@ Template.movieList.helpers({
         var fullTextSearch = Session.get('fullTextSearch');
         if (fullTextSearch)
             _.extend(filter, { title: new RegExp(fullTextSearch,'i') });
-        console.log(filter);
+        // console.log(filter);
         return Movies.find(filter, {
             sort: [ ['imdb.rating', 'desc'], 'title']
         });
