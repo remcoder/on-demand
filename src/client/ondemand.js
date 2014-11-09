@@ -10,7 +10,7 @@ Template.movieList.helpers({
         var filter = genre ? { 'genres.name': genre} : {};
         console.log(filter);
         return Movies.find(filter, {
-            sort: { 'imdb.rating' : -1 }
+            sort: [ ['imdb.rating', 'desc'], 'title']
         });
     },
     count: function(movies) {
