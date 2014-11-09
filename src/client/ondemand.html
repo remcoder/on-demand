@@ -26,13 +26,13 @@
 
 <template name="harvest">
     {{#with harvest}}
-        <div>laatste update {{lastUpdated .}}</div>
+        <div>laatste update: {{lastUpdated .}}</div>
     {{/with}}
 </template>
 
 <template name="movieList">
     {{#with movies}}
-        <div>total {{count .}} movies</div>
+        <div>totaal {{count .}} films</div>
         {{#each .}}
             {{> movieItem }}
         {{/each}}

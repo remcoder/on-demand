@@ -1,3 +1,5 @@
+moment.locale('nl');
+
 Meteor.startup(function() {
     Meteor.subscribe('movies');
     Meteor.subscribe('harvest');
