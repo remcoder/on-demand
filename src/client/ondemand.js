@@ -1,5 +1,11 @@
 moment.locale('nl');
 
+if (Meteor.isCordova)
+  $(document).on('click', 'a[target=_blank]', function(evt) {
+      var ref = window.open(evt.currentTarget.href, '_blank', 'location=yes');
+      evt.preventDefault();
+  });
+
 Meteor.startup(function() {
     Meteor.subscribe('movies');
     Meteor.subscribe('harvest');
