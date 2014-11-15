@@ -1,3 +1,37 @@
+var cheerio = Meteor.npmRequire('cheerio');
+
+function autoUpdate() {
+
+  // update immediately if necessary
+  updateIfNeeded();
+
+  // check every minute
+  Meteor.setInterval(updateIfNeeded, 60 * 1000);
+}
+
+function updateIfNeeded() {
+  if (Harvest.needsUpdate())
+    Harvest.harvestFilm1();
+}
+
+function needsUpdate() {
+  var harvest = Harvest.findOne('singleton');
+  if (!harvest) {
+      console.log('no previous harvest found')
+      Harvest.insert({ _id : 'singleton' });
+      return true;
+  }
+
+  // harvest 1x /day
+  var daysAgo = moment.duration(new Date - harvest.timestamp).asDays();
+  if (daysAgo > 1) {
+    console.log('harvest is '+ daysAgo +'day old');
+    return true;
+  }
+
+  return false;
+}
+
 function harvestFilm1() {
     Harvest.upsert('singleton', {
         timestamp: new Date,
@@ -127,9 +161,11 @@ function getDetails2(url, fun) {
     });
 }
 
+var interface = {
+    harvestFilm1 : harvestFilm1,
+    needsUpdate : needsUpdate,
+    autoUpdate : autoUpdate
+};
+Meteor.methods(interface);
+_.extend(Harvest, interface);
 
-Meteor.methods({
-    harvestFilm1 : harvestFilm1
-});
-
-this.harvestFilm1 = harvestFilm1;
