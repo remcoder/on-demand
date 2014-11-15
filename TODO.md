@@ -1,7 +1,7 @@
 TODO
 ====
 
-* exlude movies that are no longer available
+* FIXED exlude movies that are no longer available
 * mark new movies
 * mark 'last chance' movies 
 * select multiple genres at the same time (boolean OR)

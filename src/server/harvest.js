@@ -37,28 +37,47 @@ function needsUpdate() {
 }
 
 function harvestFilm1() {
-    Harvest.upsert('singleton', {
-        timestamp: new Date(),
+  Harvest.upsert('singleton', {
+      timestamp: new Date(),
+  });
+
+  var existing = Movies.find().map(function(movie) { return movie._id; });
+
+  console.log('harvesting Film1 data');
+  var before = new Date();
+  var movies = getList()
+    .wait();
+    // .filter(function(m) {return m.nowAvailable;});
+  movies.forEach(function(m) { m._id = 'film1_' + m.fid; });
+  var after = new Date() - before;
+  console.log(movies.length + ' available on demand');
+  console.log('\t' + (after/1000).toFixed(1) + 's');
+
+  var futures = movies.map(function(movie){
+      // var doc = Movies.findOne('film1_' + movie.fid);
+      // if (doc) return;
+
+      movie._id = 'film1_' + movie.fid;
+
+      return getDetailsFut(movie);
+  });
+
+  Future.wait.apply(null, futures);
+  after = new Date() - before;
+  console.log('\t' + (after/1000).toFixed(1) + 's');
+
+  var gone = existing.filter(function(oldId) {
+    return !_.find(movies, function(movie) { return movie._id == oldId; } );
+  });
+
+  if (gone.length) {
+    console.log('removing ' + gone.length + ' movies no longer available:');
+
+    gone.forEach(function(oldId) {
+      Movies.remove(oldId);
     });
+  }
 
-    console.log('harvesting Film1 data');
-    var before = new Date();
-    var movies = getList().wait();
-    var after = new Date() - before;
-    console.log('\t' + (after/1000).toFixed(1) + 's');
-
-    var futures = movies.map(function(movie){
-        // var doc = Movies.findOne('film1_' + movie.fid);
-        // if (doc) return;
-
-        movie._id = 'film1_' + movie.fid;
-
-        return getDetailsFut(movie);
-    });
-
-    Future.wait.apply(null, futures);
-    after = new Date() - before;
-    console.log('\t' + (after/1000).toFixed(1) + 's');
 }
 
 function _movie(index, li) {
