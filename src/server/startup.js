@@ -1,6 +1,6 @@
+'use strict';
 
-
-Meteor.startup(function(){
+Meteor.startup(function() {
 
   Harvest.autoUpdate();
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var cheerio = Meteor.npmRequire('cheerio');
 
 function autoUpdate() {
@@ -23,7 +25,7 @@ function needsUpdate() {
   }
 
   // harvest 1x /day
-  var daysAgo = moment.duration(new Date - harvest.timestamp).asDays();
+  var daysAgo = moment.duration(new Date() - harvest.timestamp).asDays();
   if (daysAgo > 1) {
     console.log('harvest is '+ daysAgo +'day old');
     return true;
@@ -34,7 +36,7 @@ function needsUpdate() {
 
 function harvestFilm1() {
     Harvest.upsert('singleton', {
-        timestamp: new Date,
+        timestamp: new Date(),
     });
 
     console.log('harvesting Film1 data')
@@ -161,11 +163,11 @@ function getDetails2(url, fun) {
     });
 }
 
-var interface = {
+var exports = {
     harvestFilm1 : harvestFilm1,
     needsUpdate : needsUpdate,
     autoUpdate : autoUpdate
 };
-Meteor.methods(interface);
-_.extend(Harvest, interface);
+Meteor.methods(exports);
+_.extend(Harvest, exports);
 
