@@ -109,7 +109,9 @@
       <img class="genre-icon" src="http://www.film1.nl/{{.}}" />
     {{/each}} <br/>
 
-    <a target="_blank" href="http://www.film1.nl/{{trailer}}">trailer</a><br/>
+    {{#if trailer}}
+      <a target="_blank" href="http://www.film1.nl/{{trailer}}">trailer</a><br/>
+    {{/if}}
     </p>
   </div>
 
