@@ -56,21 +56,18 @@
 
 <template name="harvest">
   {{#with harvest}}
-    <div>laatste update: {{lastUpdated .}}</div>
+    <span>laatste update: <span class="badge badge-default">{{lastUpdated .}}</span></span>
   {{/with}}
 </template>
 
 <template name="movieList">
   <div class="movie-list">
-
-  {{> harvest}}
-
-  {{#with movies}}
-    <!-- <div>totaal {{count .}} films</div> -->
-    {{#each .}}
-    {{> movieItem }}
-    {{/each}}
-  {{/with}}
+    {{#with movies}}
+      <div><span class="badge badge-default">{{count .}}</span> films /   {{> harvest}}</div>
+      {{#each .}}
+      {{> movieItem }}
+      {{/each}}
+    {{/with}}
   </div>
 </template>
 
