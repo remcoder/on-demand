@@ -18,9 +18,16 @@ Template.movieList.helpers({
     movies: function() {
         var filter = {};
 
-        var genre = Session.get('genre');
-        if (genre)
-            _.extend(filter, { 'genres.name': genre });
+        var genres = Genres.find({}).fetch()
+          .filter(function(g) {
+          return Session.get('genre-'+g.name);
+        }).map(function(g) {
+          return g.name;
+        });
+
+        if (genres.length)
+          _.extend(filter, { 'genres.name': { $in: genres} });
+
         var fullTextSearch = Session.get('fullTextSearch');
         if (fullTextSearch)
             _.extend(filter, { title: new RegExp(fullTextSearch,'i') });
@@ -42,8 +49,8 @@ Template.genres.helpers({
         });
     },
 
-    isActive : function(genre) {
-        return genre.name == Session.get('genre');
+    isSelected : function(genre) {
+        return !!Session.get('genre-' + genre.name);
     },
 
     dropdownTitle : function() {
@@ -53,33 +60,33 @@ Template.genres.helpers({
 
 Template.genres.rendered = function() {
     $('.navbar .dropdown [data-toggle=dropdown]').dropdown();
-}
+};
 
 Template.genres.events({
-    'click .dropdown-menu a' : function(evt) {
-        evt.preventDefault();
-        var value = $(evt.currentTarget).text();
-        console.log(value);
-        if (Session.get('genre') == value)
-            Session.set('genre', null);
-        else
-            Session.set('genre', value);
-    },
+  'click .dropdown-menu [data-action=reset]' : function() {
+    Genres.find({}).forEach(function(g) {
+      Session.set('genre-'+g.name, false);
+    });
+  },
 
-    'change [name=genre]' : function(evt) {
-        var value = $(evt.currentTarget).find("option:selected" ).text()
-        console.log(value);
-        Session.set('genre', value);
-    }
+  'click .dropdown-menu [data-action=select-genre]' : function(evt) {
+    var genre = $(evt.currentTarget).text().trim();
+    var key = 'genre-' + genre;
+    Session.set(key, !Session.get(key));
+  },
+
+  'click .dropdown-menu *' : function(e) {
+    e.stopPropagation();
+  }
 });
 
 Template.fullTextSearch.helpers({
-    incremental : function() {
-      return !/Android/i.test(navigator.userAgent);
-    },
-    value : function() {
-        return Session.get('fullTextSearch');
-    }
+  incremental : function() {
+    return !/Android/i.test(navigator.userAgent);
+  },
+  value : function() {
+    return Session.get('fullTextSearch');
+  }
 });
 
 function setFullTextSearch(evt) {

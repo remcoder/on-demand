@@ -51,13 +51,16 @@
     {{dropdownTitle}}
     <strong class="caret"></strong>
   </a>
-  <ul class="dropdown-menu">
+  <div class="dropdown-menu genres">
+    <button data-action="reset" class="btn btn-danger btn-block btn-xs">
+      reset
+    </button>
     {{#each genres}}
-      <li class="{{#if isActive . }}active{{/if}}">
-        <a href="#">{{name}}</a>
-      </li>
+      <button data-action="select-genre" class="btn btn-primary btn-block btn-xs {{#if isSelected . }}btn-warning{{/if}}">
+        {{name}}
+      </button>
     {{/each}}
-  </ul>
+  </div>
 </template>
 
 <template name="harvest">
