@@ -3,6 +3,7 @@
 moment.locale('nl');
 
 if (Meteor.isCordova)
+  // open links in InAppBrowser
   $(document).on('click', 'a[target=_blank]', function(evt) {
       window.open(evt.currentTarget.href, '_blank', 'location=yes');
       evt.preventDefault();
@@ -104,7 +105,7 @@ Template.fullTextSearch.events({
     'blur [type=search]' : setFullTextSearch,
     'submit form' : function(e) {
       e.preventDefault();
-      $('#bs-example-navbar-collapse-1').collapse('hide')
+      $('#bs-example-navbar-collapse-1').collapse('hide');
     }
 });
 
