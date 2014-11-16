@@ -74,22 +74,31 @@ Template.genres.events({
 });
 
 Template.fullTextSearch.helpers({
+    incremental : function() {
+      return !/Android/i.test(navigator.userAgent);
+    },
     value : function() {
         return Session.get('fullTextSearch');
     }
 });
 
 function setFullTextSearch(evt) {
-        var value = $(evt.currentTarget).val();
-        console.log(value);
-        Session.set('fullTextSearch' , value);
-    }
+  Meteor.setTimeout(function() {
+    var value = $(evt.currentTarget).val();
+    console.log(value);
+    Session.set('fullTextSearch' , value);
+  }, 300);
+}
 
 function preventDefault(evt) { evt.preventDefault(); }
 
 Template.fullTextSearch.events({
     'search [type=search]' : setFullTextSearch,
-    'submit form' : preventDefault
+    'blur [type=search]' : setFullTextSearch,
+    'submit form' : function(e) {
+      e.preventDefault();
+      $('#bs-example-navbar-collapse-1').collapse('hide')
+    }
 });
 
 Template.harvest.helpers({
