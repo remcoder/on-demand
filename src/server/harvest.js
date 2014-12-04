@@ -37,7 +37,7 @@ function needsUpdate() {
   return false;
 }
 
-function harvestFilm1() {
+var harvestFilm1 = function () {
   Harvest.upsert('singleton', {
       timestamp: new Date(),
   });
@@ -79,7 +79,7 @@ function harvestFilm1() {
     });
   }
 
-}
+}.future();
 
 function _movie(index, li) {
   var $li = $(li);
