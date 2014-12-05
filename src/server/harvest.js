@@ -39,7 +39,9 @@ function needsUpdate() {
 
 var harvestFilm1 = function () {
   Harvest.upsert('singleton', {
-      timestamp: new Date(),
+      started   : new Date(),
+      finished  : null,
+      timestamp : new Date()
   });
 
   var existing = Movies.find().map(function(movie) { return movie._id; });
@@ -79,6 +81,10 @@ var harvestFilm1 = function () {
     });
   }
 
+  Harvest.upsert('singleton', {
+      finished: new Date(),
+      timestamp: new Date()
+  });
 }.future();
 
 function _movie(index, li) {

@@ -73,7 +73,11 @@
 
 <template name="harvest">
   {{#with harvest}}
-    <span>laatste update: <span class="badge badge-default">{{lastUpdated .}}</span></span>
+    {{#if finished}}
+      <span>laatste update: <span class="badge badge-default">{{lastUpdated .}}</span></span>
+    {{else}}
+      <span class="badge badge-danger">nu aan het updaten</span>
+    {{/if}}
   {{/with}}
 </template>
 

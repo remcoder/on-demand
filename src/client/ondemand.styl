@@ -1,3 +1,4 @@
+
 .movie-list {
     padding: 50px 10px 0px 10px;
     overflow-x: hidden;
@@ -46,7 +47,23 @@ h3 a {
   background-color:  #424242;
 }
 
+.badge-danger {
+  background-color:  #cc0000;
+   -webkit-animation-name: pulse;
+   -webkit-animation-duration: 1s;
+   -webkit-animation-iteration-count: infinite;
+   -webkit-animation-direction: alternate;
+   -webkit-animation-timing-function: linear;
+   -webkit-animation-fill-mode: forwards;
+   -webkit-animation-delay: 0s;
+}
+
 a.btn-xs > .glyphicon {
   line-height: 0;
   margin-right: 5px;
+}
+
+@-webkit-keyframes pulse {
+  0%   { opacity: 0.4; }
+  100% { opacity: 1; }
 }
