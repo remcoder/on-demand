@@ -27,6 +27,11 @@ function needsUpdate() {
       return true;
   }
 
+  // restart unfinished harvest
+  if (harvest.started && !harvest.finished)
+    return true;
+
+
   // harvest 1x /day
   var daysAgo = moment.duration(new Date() - harvest.timestamp).asDays();
   if (daysAgo > 1) {
