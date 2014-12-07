@@ -11,7 +11,7 @@ function autoUpdate() {
   updateIfNeeded();
 
   // check every minute
-  Meteor.setInterval(updateIfNeeded, 60 * 1000);
+  Meteor.setInterval(updateIfNeeded, 5 * 60 * 1000);
 }
 
 function updateIfNeeded() {
