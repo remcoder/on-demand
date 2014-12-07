@@ -111,9 +111,9 @@ Template.fullTextSearch.events({
 
 Template.harvest.helpers({
     harvest : function() {
-        return Harvest.findOne('singleton');
+      return Harvest.findOne('singleton');
     },
-    lastUpdated : function() { // TODO: update every minute reactively
-        return moment(this.timestamp).fromNow();
+    lastUpdated : function() {
+      return Chronos.liveMoment(this.timestamp).fromNow();
     }
 });
