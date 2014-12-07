@@ -28,8 +28,10 @@ function needsUpdate() {
   }
 
   // restart unfinished harvest
-  if (harvest.started && !harvest.finished)
+  if (harvest.started && !harvest.finished) {
+    console.log('restart unfinished harvest');
     return true;
+  }
 
 
   // harvest 1x /day
