@@ -103,7 +103,7 @@ function _movie(index, li) {
       fid : idparts[1] ,
       cover : $li.find('a.hover-over img').attr('src'),
       url : $li.find('a.hover-over').attr('href'),
-      title: $li.find('h3 a').text(),
+      // title: $li.find('h3 a').text(),
       when : when,
       nowAvailable : nowAvailable,
   };
@@ -154,7 +154,8 @@ function getDetails1(movie, fun) {
               votes : $('.imdb-rating .rating-votes').text(),
               url : $('.imdb-rating .rating-votes').attr('href')
           },
-          desc : $('.teaser').text()
+          desc : $('.teaser').text(),
+          title : $('h2 a').text()
       };
 
       fun(undefined, details);
