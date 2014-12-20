@@ -14,3 +14,13 @@ App.icons({
   android_xhdpi : 'app-icons/android-xhdpi.png'
 });
 
+App.launchScreens({
+  android_ldpi_portrait : '',
+  android_ldpi_landscape : '',
+  android_mdpi_portrait : '',
+  android_mdpi_landscape : '',
+  android_hdpi_portrait : '',
+  android_hdpi_landscape : '',
+  'android_xhdpi_portrait': 'resources/splash/splash-720x1280.png',
+  android_xhdpi_landscape : ''
+});
