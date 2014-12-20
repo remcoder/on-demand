@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  this.Movies = new Mongo.Collection('movies');
-  this.Harvest = new Mongo.Collection('harvest'); // singleton: should contain exactly 1 doc
-  this.Genres = new Mongo.Collection('genres');
+  this.Movies = new Ground.Collection('movies');
+  this.Harvest = new Ground.Collection('harvest'); // singleton: should contain exactly 1 doc
+  this.Genres = new Ground.Collection('genres');
 }).apply(this);
