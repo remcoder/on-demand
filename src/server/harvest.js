@@ -112,7 +112,6 @@ function getList(fun) {
   HTTP.get('http://www.film1.nl/film_kijken/film1_on_demand/', function(err, res) {
     if( err) {
         console.error(err);
-        console.log(res.content);
         fun(err);
     }
     $ = cheerio.load(res.content);
@@ -124,12 +123,10 @@ function getList(fun) {
     var flat = rows.reduce(function(acc, cur) {
         return acc.concat( $(cur).children('li').map(_movie).get() );
     }, []);
-
     fun(undefined, flat);
   });
 }
 
-// var getList = Meteor.wrapAsync(getList);
 var getList = Future.wrap(getList);
 
 function getDetails1(movie, fun) {
@@ -142,7 +139,6 @@ function getDetails1(movie, fun) {
   }, function(err, res) {
       if( err) {
           console.error(err);
-          console.log(res.data.html_hoverover);
           fun(err);
       }
 
@@ -161,8 +157,6 @@ function getDetails1(movie, fun) {
           desc : $('.teaser').text()
       };
 
-      // Movies.update(movie._id, { $set: details });
-      // console.log(movie.url);
       fun(undefined, details);
   });
 }
@@ -171,15 +165,12 @@ function getDetails1(movie, fun) {
 
 function getDetails2(movie, fun) {
   var url = movie.url;
-  // console.log('url', url);
   HTTP.get('http://www.film1.nl' + url, function(err, res) {
       if (err) {
           console.error(err);
-          console.log(res);
           fun(err);
       }
 
-      // console.log(res.content);
       $ = cheerio.load(res.content);
       var genres = $('.tab-tbl-title:contains(Genre)').next().children('a').map(function(i,el) {
           return {
@@ -201,8 +192,6 @@ function getDetails2(movie, fun) {
       });
   });
 }
-
-
 
 var getDetailsFut = function (movie) {
   // get details in parallel
