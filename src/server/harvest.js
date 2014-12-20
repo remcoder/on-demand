@@ -205,13 +205,17 @@ function getDetails2(movie, fun) {
 
 
 var getDetailsFut = function (movie) {
+  // get details in parallel
   var f1 = Future.wrap(getDetails1)(movie);
   var f2 = Future.wrap(getDetails2)(movie);
-  var details = _.extend(f1.wait(), f2.wait());
 
-  Movies.upsert(movie._id, { $set: details });
-  console.log(movie.url);
+  // wait for both
+  var details1 = f1.wait();
+  var details2 = f2.wait();
 
+  var details = _.extend(movie, details1, details2);
+  console.log(movie._id,movie.title);
+  Movies.upsert(movie._id, details );
 }.future();
 
 var exports = {
