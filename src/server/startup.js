@@ -9,6 +9,6 @@ Meteor.startup(function() {
   Meteor.publish('genres', function() { return Genres.find({}); });
 
   Meteor.publish('movies', function() {
-    return Movies.find({ nowAvailable : true });
+    return Movies.find({ nowAvailable : true }, { sort: { 'imdb.rating': -1 }});
   });
 });
