@@ -37,7 +37,7 @@ function needsUpdate() {
   // harvest 1x /day
   var daysAgo = moment.duration(new Date() - harvest.timestamp).asDays();
   if (daysAgo > 1) {
-    console.log('harvest is '+ daysAgo +'day old');
+    console.log('harvest is '+ daysAgo +' day(s) old');
     return true;
   }
 
@@ -84,6 +84,7 @@ var harvestFilm1 = function () {
     console.log('removing ' + gone.length + ' movies no longer available:');
 
     gone.forEach(function(oldId) {
+      console.log(oldId, Movies.findOne(oldId).title);
       Movies.remove(oldId);
     });
   }
@@ -112,7 +113,7 @@ function getList(fun) {
   HTTP.get('http://www.film1.nl/film_kijken/film1_on_demand/', function(err, res) {
     if( err) {
         console.error(err);
-        fun(err);
+        return fun(err);
     }
     $ = cheerio.load(res.content);
 
@@ -139,7 +140,7 @@ function getDetails1(movie, fun) {
   }, function(err, res) {
       if( err) {
           console.error(err);
-          fun(err);
+          return fun(err);
       }
 
       $ = cheerio.load(res.data.html_hoverover);
@@ -169,7 +170,7 @@ function getDetails2(movie, fun) {
   HTTP.get('http://www.film1.nl' + url, function(err, res) {
       if (err) {
           console.error(err);
-          fun(err);
+          return fun(err);
       }
 
       $ = cheerio.load(res.content);
