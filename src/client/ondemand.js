@@ -1,4 +1,3 @@
-'use strict';
 
 moment.locale('nl');
 
@@ -9,8 +8,16 @@ if (Meteor.isCordova)
       evt.preventDefault();
   });
 
+
+this.moviesLoaded = new ReactiveVar(false);
+Template.registerHelper('moviesLoaded', function() {
+  return moviesLoaded.get() ? 'transparent' : '';
+});
+
 Meteor.startup(function() {
-    Meteor.subscribe('movies');
+    Meteor.subscribe('movies', function() {
+      moviesLoaded.set(true);
+    });
     Meteor.subscribe('harvest');
     Meteor.subscribe('genres');
 });

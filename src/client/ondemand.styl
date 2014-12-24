@@ -67,3 +67,31 @@ a.btn-xs > .glyphicon {
   0%   { opacity: 0.4; }
   100% { opacity: 1; }
 }
+
+@-webkit-keyframes rotate {
+  0%   {
+    transform: rotateZ(0deg);
+  }
+  50%  { transform: rotateZ(180deg); }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+.loading-indicator {
+  position: absolute;
+  padding: 0 1px;
+  transition: opacity 2s linear;
+  transform-origin: 53% 41%;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 1s;
+   -webkit-animation-iteration-count: infinite;
+   // -webkit-animation-direction: alternate;
+   -webkit-animation-timing-function: linear;
+   -webkit-animation-fill-mode: forwards;
+   -webkit-animation-delay: 0s;
+}
+
+.transparent {
+  opacity: 0;
+}
