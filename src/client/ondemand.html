@@ -82,14 +82,18 @@
 </template>
 
 <template name="movieList">
-  <div class="movie-list">
-    {{#with movies}}
-      <div><span class="badge badge-default">{{count .}}</span> films /   {{> harvest}}</div>
-      {{#each .}}
-        {{> movieItem }}
-      {{/each}}
-    {{/with}}
-  </div>
+  {{#if hasMovies}}
+    <div class="movie-list">
+      {{#with movies}}
+        <div><span class="badge badge-default">{{count .}}</span> films /   {{> harvest}}</div>
+        {{#each .}}
+          {{> movieItem }}
+        {{/each}}
+      {{/with}}
+    </div>
+  {{else}}
+    <div class='spinner'></div>
+  {{/if}}
 </template>
 
 <template name="movieItem">

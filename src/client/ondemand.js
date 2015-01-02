@@ -1,6 +1,13 @@
 
 moment.locale('nl');
 
+var _timestamp = new Date();
+function phase(label) {
+  console.log( ((new Date() - _timestamp)/1000).toFixed(1) + 's ' + label);
+}
+
+phase('init');
+
 if (Meteor.isCordova)
   // open links in InAppBrowser
   $(document).on('click', 'a[target=_blank]', function(evt) {
@@ -8,24 +15,59 @@ if (Meteor.isCordova)
       evt.preventDefault();
   });
 
-
+this.firstPaint = new ReactiveVar(false);
 this.moviesLoaded = new ReactiveVar(false);
 Template.registerHelper('moviesLoaded', function() {
   return moviesLoaded.get() ? 'transparent' : '';
 });
 
 Meteor.startup(function() {
-    Meteor.subscribe('movies', function() {
-      moviesLoaded.set(true);
-    });
-    Meteor.subscribe('harvest');
-    Meteor.subscribe('genres');
+  phase('startup');
+
+  Tracker.autorun(function(c) {
+    if (firstPaint.get()) {
+      phase('subscribing');
+      Meteor.subscribe('movies', function() {
+        moviesLoaded.set(true);
+        phase('movies ready');
+      });
+      Meteor.subscribe('harvest', function() {});
+      Meteor.subscribe('genres');
+
+    }
+  });
+
 });
+
+Template.movieList.rendered = function() {
+  var count = 0;
+  this.autorun(function() {
+    count++;
+    if (count == 1)
+      setTimeout(function() {
+        firstPaint.set(true);
+      },100);
+
+    phase('render ' + count + ', ' + Movies.find().count() + ' movies loaded');
+  });
+}
+
+var json = localStorage.getItem('movies');
+if (json)
+  var localMovies = JSON.parse(json);
+phase('got movies from localstorage')
 
 Template.movieList.helpers({
     movies: function() {
-        var filter = {};
 
+        if (!moviesLoaded.get()) {
+          if (!json) return [];
+
+          phase('using movies from localstorage')
+          return localMovies;
+        }
+
+        var filter = {};
         var genres = Genres.find({}).fetch()
           .filter(function(g) {
           return Session.get('genre-'+g.name);
@@ -39,14 +81,26 @@ Template.movieList.helpers({
         var fullTextSearch = Session.get('fullTextSearch');
         if (fullTextSearch)
             _.extend(filter, { title: new RegExp(fullTextSearch,'i') });
-        // console.log(filter);
-        return Movies.find(filter, {
+        var movies = Movies.find(filter, {
             sort: [ ['imdb.rating', 'desc'], 'title']
         });
+
+        phase('got movies '+movies.count()+' from server');
+        // console.log('storing new movies in localstorage')
+        localStorage.setItem('movies', JSON.stringify(movies.fetch().slice(0,10) ));
+
+        return movies;
     },
     count: function(movies) {
         if (movies)
-        return movies.count();
+        return movies.count ? movies.count() : movies.length;
+    },
+
+    hasMovies: function() {
+      if (moviesLoaded.get())
+        return true;
+      else
+        return localMovies && localMovies.length;
     }
 });
 
