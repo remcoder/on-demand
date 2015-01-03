@@ -3,12 +3,17 @@ TODO
 
 # 1.0
 
-  * Android splash screen in Meteor/Cordova compatible way http://docs.meteor.com/#/full/mobileconfigjs
-  * smoother app updates: https://github.com/meteor/mobile-packages/blob/master/packages/mdg:reload-on-resume/README.md
+  * proper loading indicator (w/o blocking out the screen)
+  * put # of movies in static header and combine with the loading indicator
+  * put 'laatste update' at the bottom for now
+  * use a red highlight color
+  * fix blurry icons
+  * splash screen (fix centering)
 
 # 1.1
-  
+  * improve rendering performance (seems to be the bottleneck now)
   * star movies / show list of starred movies
+  * smoother app updates: https://github.com/meteor/mobile-packages/blob/master/packages/mdg:reload-on-resume/README.md
 
 # 1.2
   
