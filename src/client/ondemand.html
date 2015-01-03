@@ -23,20 +23,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <span class="navbar-brand" href="#">Film1 On Demand<span class="loading-indicator {{moviesLoaded}}">*</span></span>
-    </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      {{>fullTextSearch }}
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
-          {{> genres}}
-        </li>
-      </ul>
-    </div>
-  </nav>
 
   {{> movieList}}
 </body>
@@ -72,20 +59,48 @@
 </template>
 
 <template name="harvest">
-  {{#with harvest}}
-    {{#if finished}}
-      <span>laatste update: <span class="badge badge-default">{{lastUpdated .}}</span></span>
-    {{else}}
-      <span class="badge badge-danger">nu aan het updaten</span>
-    {{/if}}
-  {{/with}}
+  <div class="nav navbar-nav navbar-info">
+    {{#with harvest}}
+      {{#if finished}}
+        <span>laatste update <span class="badge badge-default">{{lastUpdated .}}</span></span>
+      {{else}}
+        <span class="badge badge-danger">nu aan het updaten</span>
+      {{/if}}
+    {{/with}}
+  </div>
 </template>
 
 <template name="movieList">
+  <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand" href="#">Film1 On Demand
+        <span class="loading-indicator {{moviesLoaded}}">*</span>
+        <span class="navbar-brand-ext"><span class="badge badge-default">{{count movies}}</span> films</span>
+      </span>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      {{> harvest}}
+      {{>fullTextSearch }}
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          {{> genres}}
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
   {{#if hasMovies}}
     <div class="movie-list">
       {{#with movies}}
-        <div><span class="badge badge-default">{{count .}}</span> films /   {{> harvest}}</div>
         {{#each .}}
           {{> movieItem }}
         {{/each}}

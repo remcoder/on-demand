@@ -4,11 +4,12 @@ TODO
 # 1.0
 
   * proper loading indicator (w/o blocking out the screen)
-  * put # of movies in static header and combine with the loading indicator
-  * put 'laatste update' at the bottom for now
+  # combine # of movies with the loading indicator
   * use a red highlight color
   * fix blurry icons
   * splash screen (fix centering)
+  * [done] put # of movies in static header 
+  * [done] put 'laatste update' in the menu
 
 # 1.1
   * improve rendering performance (seems to be the bottleneck now)
