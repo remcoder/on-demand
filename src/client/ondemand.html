@@ -23,8 +23,6 @@
 </head>
 
 <body>
-
-
   {{> movieList}}
 </body>
 
@@ -64,7 +62,7 @@
       {{#if finished}}
         <span>laatste update <span class="badge badge-default">{{lastUpdated .}}</span></span>
       {{else}}
-        <span class="badge badge-danger">nu aan het updaten</span>
+        <span class="badge badge-danger pulse">nu aan het updaten</span>
       {{/if}}
     {{/with}}
   </div>
@@ -80,8 +78,10 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand" href="#">Film1 On Demand
-        <span class="loading-indicator {{moviesLoaded}}">*</span>
-        <span class="navbar-brand-ext"><span class="badge badge-default">{{count movies}}</span> films</span>
+
+        <span class="navbar-brand-ext">
+          <span class="badge badge-default {{#unless moviesLoaded}}pulse{{/unless}}">{{count movies}}
+          </span> films</span>
       </span>
     </div>
 

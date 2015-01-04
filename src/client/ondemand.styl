@@ -57,13 +57,16 @@ h3 a {
 
 .badge-danger {
   background-color:  #cc0000;
-   -webkit-animation-name: pulse;
-   -webkit-animation-duration: 1s;
-   -webkit-animation-iteration-count: infinite;
-   -webkit-animation-direction: alternate;
-   -webkit-animation-timing-function: linear;
-   -webkit-animation-fill-mode: forwards;
-   -webkit-animation-delay: 0s;
+}
+
+.pulse {
+  -webkit-animation-name: pulse;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-fill-mode: forwards;
+  -webkit-animation-delay: 0s;
 }
 
 a.btn-xs > .glyphicon {
@@ -86,24 +89,6 @@ a.btn-xs > .glyphicon {
   100% {
     transform: rotateZ(360deg);
   }
-}
-
-.loading-indicator {
-  position: absolute;
-  padding: 0 1px;
-  transition: opacity 2s linear;
-  transform-origin: 53% 41%;
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 1s;
-   -webkit-animation-iteration-count: infinite;
-   // -webkit-animation-direction: alternate;
-   -webkit-animation-timing-function: linear;
-   -webkit-animation-fill-mode: forwards;
-   -webkit-animation-delay: 0s;
-}
-
-.transparent {
-  opacity: 0;
 }
 
 .spinner {

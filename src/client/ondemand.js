@@ -17,9 +17,7 @@ if (Meteor.isCordova)
 
 this.firstPaint = new ReactiveVar(false);
 this.moviesLoaded = new ReactiveVar(false);
-Template.registerHelper('moviesLoaded', function() {
-  return moviesLoaded.get() ? 'transparent' : '';
-});
+Template.registerHelper('moviesLoaded', function() { return moviesLoaded.get(); });
 
 Meteor.startup(function() {
   phase('startup');
@@ -92,8 +90,10 @@ Template.movieList.helpers({
         return movies;
     },
     count: function(movies) {
-        if (movies)
-        return movies.count ? movies.count() : movies.length;
+        if (moviesLoaded.get())
+          return movies.count();
+
+        return 'laden..'
     },
 
     hasMovies: function() {
