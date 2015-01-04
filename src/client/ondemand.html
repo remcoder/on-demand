@@ -77,11 +77,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <span class="navbar-brand" href="#">Film1 On Demand
+      <span class="navbar-brand" href="#"><span class="badge badge-danger">Film1</span> On Demand
 
         <span class="navbar-brand-ext">
-          <span class="badge badge-default {{#unless moviesLoaded}}pulse{{/unless}}">{{count movies}}
-          </span> films</span>
+          {{#if moviesLoaded}}
+            {{count movies}} films
+          {{else}}
+            <span class="badge badge-default pulse">{{count movies}}</span>
+          {{/if}}
+
+        </span>
       </span>
     </div>
 
@@ -125,7 +130,7 @@
 
   <div class="col-md-5 col-xs-6 column">
    <p class="movie-info">
-    IMDB <span class="badge">{{imdb.rating}}</span> <br/>
+    <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB<br/>
     {{#each genres}}
       <span class="label label-default">{{name}}</span>
     {{/each }}<br/>
