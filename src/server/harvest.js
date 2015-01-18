@@ -1,5 +1,5 @@
 /* globals -$ */
-'use strict';
+// 'use strict';
 
 var Future = Npm.require('fibers/future');
 var cheerio = Meteor.npmRequire('cheerio');
@@ -159,6 +159,10 @@ function getDetails1(movie, fun) {
           title : $('h2 a').text()
       };
 
+      // map images to our kijkwijzer spritesheet
+      details.kijkwijzer = MapKijkWijzer(details.icons);
+      delete details.icons;
+
       fun(undefined, details);
   });
 }
@@ -217,3 +221,44 @@ var exports = {
 Meteor.methods(exports);
 _.extend(Harvest, exports);
 
+var KijkwijzerMapping = {
+  'leeftijd_6_small.gif' : 'sprite_6',
+  'leeftijd_9_small.gif' : 'sprite_9',
+  'leeftijd_12_small.gif' : 'sprite_12',
+  'leeftijd_16_small.gif' : 'sprite_16',
+  'leeftijd_al_small.gif' : 'sprite_AL',
+  'eng_small.gif'         : 'sprite_A',
+  'discriminatie_small.gif' : 'sprite_D',
+  'geweld_small.gif'      : 'sprite_G',
+  'drugs_small.gif'       : 'sprite_H',
+  'sex_small.gif'         : 'sprite_S',
+  'groftaalgebruik'       : 'sprite_T'
+};
+
+MapKijkWijzer = function(icons) {
+  var kijkwijzer = [];
+  if (icons) {
+    icons.forEach(function(i){
+      for(var img in KijkwijzerMapping) {
+        if (i.indexOf(img) > -1) {
+          kijkwijzer.push(KijkwijzerMapping[img])
+          return;
+        }
+      }
+    });
+  }
+  return kijkwijzer;
+}
+
+Kijkwijzer = function kijkwijzer() {
+  console.log('kijkwijzer conversion')
+  Movies.find().forEach(function(m) {
+
+    var kijkwijzer = MapKijkWijzer(m.icons);
+    console.log(kijkwijzer);
+    Movies.update(m._id, { $set: {
+      kijkwijzer: kijkwijzer
+    }});
+
+  });
+}
