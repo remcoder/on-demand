@@ -81,20 +81,15 @@ Template.movieList.helpers({
             _.extend(filter, { title: new RegExp(fullTextSearch,'i') });
         var movies = Movies.find(filter, {
             sort: [ ['imdb.rating', 'desc'], 'title']
-        });
+        }).fetch();
 
-        phase('got movies '+movies.count()+' from server');
+        phase('got movies '+movies.length+' from server');
         // console.log('storing new movies in localstorage')
-        localStorage.setItem('movies', JSON.stringify(movies.fetch().slice(0,10) ));
+        localStorage.setItem('movies', JSON.stringify(movies.slice(0,10) ));
 
         return movies;
     },
-    count: function(movies) {
-        if (moviesLoaded.get())
-          return movies.count();
 
-        return 'laden..'
-    },
 
     hasMovies: function() {
       if (moviesLoaded.get())
@@ -170,7 +165,10 @@ Template.fullTextSearch.events({
     }
 });
 
-Template.harvest.helpers({
+Template.status.helpers({
+    count: function(movies) {
+        return this.length;
+    },
     harvest : function() {
       return Harvest.findOne('singleton');
     },

@@ -56,8 +56,14 @@
   </div>
 </template>
 
-<template name="harvest">
+<template name="status">
   <div class="nav navbar-nav navbar-info">
+    {{#if moviesLoaded}}
+      <span class="badge badge-default">{{count movies}} films</span>
+    {{else}}
+      <span class="badge badge-default pulse">laden..</span>
+    {{/if}}
+
     {{#with harvest}}
       {{#if finished}}
         <span>laatste update <span class="badge badge-default">{{lastUpdated .}}</span></span>
@@ -69,6 +75,7 @@
 </template>
 
 <template name="movieList">
+{{#with movies}}
   <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -80,19 +87,14 @@
       <span class="navbar-brand" href="#"><span class="badge badge-danger">Film1</span> On Demand
 
         <span class="navbar-brand-ext">
-          {{#if moviesLoaded}}
-            {{count movies}} films
-          {{else}}
-            <span class="badge badge-default pulse">{{count movies}}</span>
-          {{/if}}
 
         </span>
       </span>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      {{> harvest}}
-      {{>fullTextSearch }}
+      {{> status }}
+      {{> fullTextSearch }}
 
       <ul class="nav navbar-nav">
         <li class="dropdown">
@@ -105,15 +107,15 @@
 
   {{#if hasMovies}}
     <div class="movie-list">
-      {{#with movies}}
+
         {{#each .}}
           {{> movieItem }}
         {{/each}}
-      {{/with}}
     </div>
   {{else}}
     <div class='spinner'></div>
   {{/if}}
+      {{/with}}
 </template>
 
 <template name="movieItem">
