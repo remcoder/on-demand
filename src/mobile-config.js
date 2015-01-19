@@ -9,9 +9,9 @@ App.info({
 
 App.icons({
   // android_ldpi : '' // unessecary according to docs http://developer.android.com/design/style/iconography.html
-  android_mdpi : 'app-icons/android-mdpi.png', // base 48dp icon
-  android_hdpi : 'app-icons/android-hdpi.png',
-  android_xhdpi : 'app-icons/android-xhdpi.png'
+  android_mdpi : 'app-icons/icon-mdpi.png', // base 48dp icon
+  android_hdpi : 'app-icons/icon-hdpi.png',
+  android_xhdpi : 'app-icons/icon-xhdpi.png'
 });
 
 App.launchScreens({

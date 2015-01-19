@@ -4,8 +4,9 @@ TODO
 # 1.0
 
   * add trademark references and stuff
-  * replace app icon 
   * ? proper loading indicator (w/o blocking out the screen)
+  * make spinner match theme: make it the same red
+  * [done] replace app icon 
   * [done] redo splash screen: dark background. reuse the app title/badge
   * [done] fix blurry icons
   * [done] use a red highlight color
