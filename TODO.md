@@ -3,9 +3,10 @@ TODO
 
 # 1.0
 
+  * add trademark references and stuff
   * replace app icon 
-  * redo splash screen: dark background. reuse the app title/badge
   * ? proper loading indicator (w/o blocking out the screen)
+  * [done] redo splash screen: dark background. reuse the app title/badge
   * [done] fix blurry icons
   * [done] use a red highlight color
   # [done] combine # of movies with the loading indicator
