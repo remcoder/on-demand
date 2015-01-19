@@ -4,8 +4,7 @@ TODO
 # 1.0
 
   * add trademark references and stuff
-  * ? proper loading indicator (w/o blocking out the screen)
-  * make spinner match theme: make it the same red
+  * [done] make spinner match theme: make it the same red
   * [done] replace app icon 
   * [done] redo splash screen: dark background. reuse the app title/badge
   * [done] fix blurry icons
@@ -15,8 +14,8 @@ TODO
   * [done] put 'laatste update' in the menu
 
 # post 1.0
-  * Material Design?
   * offline support (store / retrieve the whole list in localStorage)
+  * improve perceived load-time when first installing app
   * improve rendering performance (seems to be the bottleneck now)
   * star movies / show list of starred movies
   * smoother app updates: https://github.com/meteor/mobile-packages/blob/master/packages/mdg:reload-on-resume/README.md
