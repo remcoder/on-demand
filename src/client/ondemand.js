@@ -8,6 +8,15 @@ function phase(label) {
 
 phase('init');
 
+// suspend app when back button is pressed
+if(Meteor.isCordova){
+  Meteor.startup(function(){
+    document.addEventListener("backbutton", function () {
+      window.plugins.Suspend.suspendApp();
+    });
+  });
+}
+
 if (Meteor.isCordova)
   // open links in InAppBrowser
   $(document).on('click', 'a[target=_blank]', function(evt) {
