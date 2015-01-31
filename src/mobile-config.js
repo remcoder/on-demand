@@ -4,7 +4,8 @@ App.info({
   description: 'Film1 On Demand',
   author: 'Remco Veldkamp',
   email: 'remcoder@gmail.com',
-  website: 'http://realstuffforabstractpeople.com'
+  website: 'http://realstuffforabstractpeople.com',
+  version: '0.9.0'
 });
 
 App.icons({
