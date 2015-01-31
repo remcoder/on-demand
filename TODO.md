@@ -3,7 +3,7 @@ TODO
 
 # 1.0
 
-  * add trademark references and stuff
+  * [done] add trademark references and stuff
   * [done] make spinner match theme: make it the same red
   * [done] replace app icon 
   * [done] redo splash screen: dark background. reuse the app title/badge
