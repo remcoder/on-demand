@@ -101,10 +101,13 @@ Template.movieList.helpers({
 
 
     hasMovies: function() {
+      if (!firstPaint.get())
+        return false;
+
       if (moviesLoaded.get())
         return true;
-      else
-        return localMovies && localMovies.length;
+
+      return localMovies && localMovies.length;
     }
 });
 
