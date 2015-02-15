@@ -117,7 +117,7 @@
   {{else}}
     <div class='spinner'></div>
   {{/if}}
-      {{/with}}
+  {{/with}}
 </template>
 
 <template name="movieItem">
@@ -136,9 +136,11 @@
    <p class="movie-info">
     <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB<br/>
     {{#each genres}}
-      <span class="label label-default">{{name}}</span>
+      <span class="badge badge-default">{{name}}</span>
     {{/each }}<br/>
-    {{duration}}<br/>
+    {{#if duration}}
+      <span class="badge badge-default">{{formatDuration duration}}</span> minuten<br/>
+    {{/if}}
     {{#each kijkwijzer}}
       <div class="kijkwijzer {{.}}"></div>
     {{/each}} <br/>
@@ -152,7 +154,7 @@
   </div>
 
   <div class="col-md-12 col-xs-12 column">
-    <p>{{desc}}</p>
+    <p class="desc">{{desc}}</p>
   </div>
 
 

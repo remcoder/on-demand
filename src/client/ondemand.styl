@@ -5,20 +5,24 @@
 }
 
 .movie-item {
-    padding-bottom: 20px;
+    padding: 10px;
     border-bottom: 1px solid #444;
 
+    color: #eee;
   .movie-info {
     * {
       margin-bottom: 10px;
     }
-
   }
 
+  p.desc {
+    margin-top: 10px;
+    font-size: 16px;
+  }
 }
 
 h3 a {
-    color: white;
+    color: #eee;
 }
 
 .genre-icon {
@@ -61,13 +65,26 @@ h3 a {
   }
 }
 
+.label-default {
+  background-color: #060606;
+  border: 1px solid #560000;
+}
+
+.btn-default {
+  background-color: #560000;
+  border-color: #560000;
+  border-radius: 10px;
+  padding: 3px 7px 3px 7px;
+}
+
 .badge {
-  padding-top: 6px;
+  padding-top: 5px;
   font-size: inherit;
 }
 
 .badge-default {
-  background-color:  #424242;
+  background-color:  #060606;
+  border: 1px solid #666;
 }
 
 .badge-danger {
@@ -142,23 +159,27 @@ a.btn-xs > .glyphicon {
   to {transform: rotate(359deg);}
 }
 
+
+icon-size = 25px
+
 .kijkwijzer {
   background: url('kijkwijzer.png') no-repeat top left;
-  width: 37px;
-  height: 37px;
+  width: icon-size;
+  height: icon-size;
   display: inline-block;
   -webkit-filter: invert(100%);
-  &.sprite_6 { background-position: 0 0; }
-  &.sprite_9 { background-position: 0 -37px; }
-  &.sprite_12 { background-position: 0 -74px; }
-  &.sprite_16 { background-position: 0 -111px; }
-  &.sprite_A { background-position: 0 -148px; }
-  &.sprite_AL { background-position: 0 -185px; }
-  &.sprite_D { background-position: 0 -222px; }
-  &.sprite_G { background-position: 0 -259px; }
-  &.sprite_H { background-position: 0 -296px; }
-  &.sprite_S { background-position: 0 -333px; }
-  &.sprite_T { background-position: 0 -370px; }
+  background-size: icon-size;
+  &.sprite_6  { background-position: 0 0; }
+  &.sprite_9  { background-position: 0 -1 * icon-size; }
+  &.sprite_12 { background-position: 0 -2 * icon-size; }
+  &.sprite_16 { background-position: 0 -3 * icon-size; }
+  &.sprite_A  { background-position: 0 -4 * icon-size; }
+  &.sprite_AL { background-position: 0 -5 * icon-size; }
+  &.sprite_D  { background-position: 0 -6 * icon-size; }
+  &.sprite_G  { background-position: 0 -7 * icon-size; }
+  &.sprite_H  { background-position: 0 -8 * icon-size; }
+  &.sprite_S  { background-position: 0 -9 * icon-size; }
+  &.sprite_T  { background-position: 0 -10 * icon-size; }
 }
 
 

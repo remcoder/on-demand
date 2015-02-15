@@ -116,6 +116,14 @@ Template.movieList.helpers({
     }
 });
 
+Template.movieItem.helpers({
+  formatDuration: function(s) {
+      console.log(s);
+      if (!s) return '?';
+      return +s.slice(0, 3);
+    }
+});
+
 Template.genres.helpers({
     genres : function() {
         return Genres.find({}, {
