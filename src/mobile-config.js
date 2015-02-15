@@ -1,7 +1,7 @@
 App.info({
-  id: 'remcoder.film1.on.demand',
-  name: 'Film1 On Demand',
-  description: 'Film1 On Demand',
+  id: 'remcoder.film1.on.demand.gids',
+  name: 'Film1 On Demand Gids',
+  description: 'Film1 On Demand Gids',
   author: 'Remco Veldkamp',
   email: 'remcoder@gmail.com',
   website: 'http://realstuffforabstractpeople.com',
