@@ -60,17 +60,22 @@ Template.movieList.rendered = function() {
 }
 
 var json = localStorage.getItem('movies');
-if (json)
+if (json) {
   var localMovies = JSON.parse(json);
-phase('got movies from localstorage')
+  if (localMovies)
+    phase('got movies from localstorage: ' + localMovies.length);
+}
+else {
+  localMovies = defaultMovies;
+  phase('using default movies ' + localMovies.length)
+}
+
 
 Template.movieList.helpers({
     movies: function() {
 
         if (!moviesLoaded.get()) {
-          if (!json) return [];
-
-          phase('using movies from localstorage')
+          phase('using movies from localstorage or default')
           return localMovies;
         }
 
