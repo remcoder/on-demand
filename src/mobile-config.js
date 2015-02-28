@@ -5,7 +5,7 @@ App.info({
   author: 'Remco Veldkamp',
   email: 'remcoder@gmail.com',
   website: 'http://realstuffforabstractpeople.com',
-  version: '0.9.0'
+  version: '1.0.0'
 });
 
 App.icons({
