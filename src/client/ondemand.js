@@ -11,8 +11,15 @@ phase('init');
 // suspend app when back button is pressed
 if(Meteor.isCordova){
   Meteor.startup(function(){
+    //console.log('startup');
+    GAnalytics.pageview("/main/startup");
+
     document.addEventListener("backbutton", function () {
       window.plugins.Suspend.suspendApp();
+    });
+    document.addEventListener("resume", function () {
+      //console.log('resume!');
+      GAnalytics.pageview("/main/resume");
     });
   });
 }
@@ -29,6 +36,11 @@ this.moviesLoaded = new ReactiveVar(false);
 Template.registerHelper('moviesLoaded', function() { return moviesLoaded.get(); });
 
 Meteor.startup(function() {
+  $(window).scroll(_.throttle(function(evt) {
+    //console.log('scroll');
+    GAnalytics.event("main","scroll");
+  }, 10000));
+
   phase('startup');
 
   Tracker.autorun(function(c) {

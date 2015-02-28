@@ -1,0 +1,8 @@
+{
+  "public" : {
+    "ga": {
+      "debug": true,
+      "account":"UA-60230947-2"
+    }
+  }
+}
