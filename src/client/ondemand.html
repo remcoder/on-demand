@@ -134,7 +134,10 @@
 
   <div class="col-md-5 col-xs-6 column">
    <p class="movie-info">
-    <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB<br/>
+     {{#if imdb.rating}}
+      <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB<br/>
+     {{/if}}
+
     {{#each genres}}
       <span class="badge badge-default">{{name}}</span>
     {{/each }}<br/>
