@@ -104,61 +104,71 @@
         </li>
       </ul>
  -->
-    </div>
-  </nav>
+      </div>
+    </nav>
 
-  {{#if hasMovies}}
-    <div class="movie-list">
+    {{#if hasMovies}}
+      <div class="movie-list">
 
         {{#each .}}
           {{> movieItem }}
         {{/each}}
-    </div>
-  {{else}}
-    <div class='spinner'></div>
-  {{/if}}
+      </div>
+    {{else}}
+      <div class='spinner'></div>
+    {{/if}}
   {{/with}}
 </template>
 
 <template name="movieItem">
   <div class="row clearfix movie-item">
-  <div class="col-md-12 column">
-    <h3>{{title}}</h3>
-  </div>
+    <div class="col-md-12 column">
+      <h3>{{title}}</h3>
+    </div>
 
-  <div class="col-md-5 col-xs-6 column">
-    <p class="xtext-center">
-    <img src="http://www.film1.nl/{{cover}}"/>
-    </p>
-  </div>
+    <div class="col-md-5 col-xs-6 column">
+      <p class="xtext-center">
+        <img src="http://www.film1.nl/{{cover}}"/>
+      </p>
+    </div>
 
-  <div class="col-md-5 col-xs-6 column">
-   <p class="movie-info">
-     {{#if imdb.rating}}
-      <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB<br/>
-     {{/if}}
+    <div class="col-md-5 col-xs-6 column">
+    <p class="movie-info">
+      {{#if imdb.rating}}
+        <div class="movie-info-item">
+          <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB
+        </div>
+      {{/if}}
 
-    {{#each genres}}
-      <span class="badge badge-default">{{name}}</span>
-    {{/each }}<br/>
-    {{#if duration}}
-      <span class="badge badge-default">{{formatDuration duration}}</span> minuten<br/>
-    {{/if}}
-    {{#each kijkwijzer}}
-      <div class="kijkwijzer {{.}}"></div>
-    {{/each}} <br/>
+      <div>
+        {{#each genres}}
+          <span class="badge badge-default movie-info-item">{{name}}</span>
+        {{/each }}
+      </div>
 
-    {{#if trailer}}
-      <a class="btn btn-default btn-xs" target="_blank" href="http://www.film1.nl/{{trailer}}">
-        <span class="glyphicon glyphicon-facetime-video"></span>trailer
-      </a><br/>
-    {{/if}}
-    </p>
-  </div>
+      {{#if duration}}
+        <div class="movie-info-item">
+          <span class="badge badge-default">{{formatDuration duration}}</span> minuten
+        </div>
+      {{/if}}
 
-  <div class="col-md-12 col-xs-12 column">
-    <p class="desc">{{desc}}</p>
-  </div>
+      <div>
+        {{#each kijkwijzer}}
+          <div class="kijkwijzer {{.}} movie-info-item"></div>
+        {{/each}}
+      </div>
+
+      {{#if trailer}}
+        <a class="btn btn-default btn-xs" target="_blank" href="http://www.film1.nl/{{trailer}}">
+          <span class="glyphicon glyphicon-facetime-video"></span>trailer
+        </a>
+      {{/if}}
+      </p>
+    </div>
+
+    <div class="col-md-12 col-xs-12 column">
+      <p class="desc">{{desc}}</p>
+    </div>
 
 
   </div>
