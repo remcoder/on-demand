@@ -1,16 +1,20 @@
 /* globals -$ */
-// 'use strict';
+'use strict';
 
 var Future = Npm.require('fibers/future');
 var cheerio = Meteor.npmRequire('cheerio');
 var $ = null;
+
+Future.waitAll = function(arr) {
+  return Future.wait.apply(null, arr);
+};
 
 function autoUpdate() {
 
   // update immediately if necessary
   updateIfNeeded();
 
-  // check every minute
+  // check every 5 minutes
   Meteor.setInterval(updateIfNeeded, 5 * 60 * 1000);
 }
 
@@ -69,15 +73,14 @@ var harvestFilm1 = function () {
   movies = movies.filter(function(m){ return newMovies.indexOf(m._id) > -1; });
   console.log(movies.length + ' new movies to be harvested');
 
-
   var futures = movies.map(getDetailsFut);
-  Future.wait.apply(null, futures);
+  Future.waitAll(futures);
 
   after = new Date() - before;
   console.log('\t' + (after/1000).toFixed(1) + 's');
 
   if (oldMovies.length) {
-    console.log('removing ' + oldMovies.length + ' movies no longer available:');
+    console.log(oldMovies.length + ' movies will be removed because they are no longer available:');
 
     oldMovies.forEach(function(oldId) {
       console.log(Movies.findOne(oldId).title);
@@ -121,79 +124,69 @@ function getList() {
 }
 
 
-function getDetails1(movie, fun) {
+var getDetails1 = function (movie) {
   var movieId = movie.fid;
-  HTTP.post('http://www.film1.nl/films/ajax_get_film_info.php', {
+  var res = HTTP.post('http://www.film1.nl/films/ajax_get_film_info.php', {
       params: {
           movie_id: movieId,
           movie_nr: 0
       }
-  }, function(err, res) {
-      if( err) {
-          console.error(err);
-          return fun(err);
-      }
-
-      $ = cheerio.load(res.data.html_hoverover);
-      var details = {
-          duration : $('.duration').text(),
-          trailer : $('.movie-trailer').attr('href'),
-          icons : $('.info li img')
-              .map(function(i, el) { return $(el).attr('src'); })
-              .get(),
-          imdb : {
-              rating : $('.imdb-rating .rating-value').text(),
-              votes : $('.imdb-rating .rating-votes').text(),
-              url : $('.imdb-rating .rating-votes').attr('href')
-          },
-          desc : $('.teaser').text(),
-          title : $('h2 a').text()
-      };
-
-      // map images to our kijkwijzer spritesheet
-      details.kijkwijzer = MapKijkWijzer(details.icons);
-      delete details.icons;
-
-      fun(undefined, details);
   });
-}
+
+  $ = cheerio.load(res.data.html_hoverover);
+  var details = {
+      duration : $('.duration').text(),
+      trailer : $('.movie-trailer').attr('href'),
+      icons : $('.info li img')
+          .map(function(i, el) { return $(el).attr('src'); })
+          .get(),
+      imdb : {
+          rating : $('.imdb-rating .rating-value').text(),
+          votes : $('.imdb-rating .rating-votes').text(),
+          url : $('.imdb-rating .rating-votes').attr('href')
+      },
+      desc : $('.teaser').text(),
+      title : $('h2 a').text()
+  };
+
+  // map images to our kijkwijzer spritesheet
+  details.kijkwijzer = mapKijkWijzer(details.icons);
+  delete details.icons;
+
+  return details;
+}.future();
 
 
 
-function getDetails2(movie, fun) {
+var getDetails2 = function (movie) {
   var url = movie.url;
-  HTTP.get('http://www.film1.nl' + url, function(err, res) {
-      if (err) {
-          console.error(err);
-          return fun(err);
+  var res = HTTP.get('http://www.film1.nl' + url);
+
+  $ = cheerio.load(res.content);
+  var genres = $('.tab-tbl-title:contains(Genre)').next().children('a').map(function(i,el) {
+      return {
+          name: $(el).text(),
+          url: $(el).attr('href'),
+      };
+  }).get();
+
+  genres.forEach(function(g) {
+      var id = 'http://www.film1.nl' + g.url;
+      if (!Genres.findOne(id)) {
+          g._id = id;
+          Genres.upsert(id, g);
       }
-
-      $ = cheerio.load(res.content);
-      var genres = $('.tab-tbl-title:contains(Genre)').next().children('a').map(function(i,el) {
-          return {
-              name: $(el).text(),
-              url: $(el).attr('href'),
-          };
-      }).get();
-
-      genres.forEach(function(g) {
-          var id = 'http://www.film1.nl' + g.url;
-          if (!Genres.findOne(id)) {
-              g._id = id;
-              Genres.upsert(id, g);
-          }
-      });
-
-      fun(undefined, {
-          genres: genres
-      });
   });
-}
+
+  return {
+      genres: genres
+  };
+}.future();
 
 var getDetailsFut = function (movie) {
   // get details in parallel
-  var f1 = Future.wrap(getDetails1)(movie);
-  var f2 = Future.wrap(getDetails2)(movie);
+  var f1 = getDetails1(movie);
+  var f2 = getDetails2(movie);
 
   // wait for both
   var details1 = f1.wait();
@@ -205,9 +198,10 @@ var getDetailsFut = function (movie) {
 }.future();
 
 var exports = {
-    harvestFilm1 : harvestFilm1,
-    needsUpdate : needsUpdate,
-    autoUpdate : autoUpdate
+  harvestFilm1 : harvestFilm1,
+  needsUpdate : needsUpdate,
+  autoUpdate : autoUpdate,
+  kijkwijzerConversion: kijkwijzerConversion
 };
 Meteor.methods(exports);
 _.extend(Harvest, exports);
@@ -226,13 +220,13 @@ var KijkwijzerMapping = {
   'groftaalgebruik'       : 'sprite_T'
 };
 
-MapKijkWijzer = function(icons) {
+function mapKijkWijzer(icons) {
   var kijkwijzer = [];
   if (icons) {
     icons.forEach(function(i){
       for(var img in KijkwijzerMapping) {
         if (i.indexOf(img) > -1) {
-          kijkwijzer.push(KijkwijzerMapping[img])
+          kijkwijzer.push(KijkwijzerMapping[img]);
           return;
         }
       }
@@ -241,11 +235,11 @@ MapKijkWijzer = function(icons) {
   return kijkwijzer;
 };
 
-Kijkwijzer = function kijkwijzer() {
-  console.log('kijkwijzer conversion')
+function kijkwijzerConversion() {
+  console.log('one-off kijkwijzer conversion');
   Movies.find().forEach(function(m) {
 
-    var kijkwijzer = MapKijkWijzer(m.icons);
+    var kijkwijzer = mapKijkWijzer(m.icons);
     console.log(kijkwijzer);
     Movies.update(m._id, { $set: {
       kijkwijzer: kijkwijzer
