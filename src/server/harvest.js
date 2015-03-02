@@ -46,45 +46,41 @@ function needsUpdate() {
 
 var harvestFilm1 = function () {
   Harvest.upsert('singleton', {
-      started   : new Date(),
-      finished  : null,
-      timestamp : new Date()
+    started   : new Date(),
+    finished  : null,
+    timestamp : new Date()
   });
 
   var existing = Movies.find().map(function(movie) { return movie._id; });
 
   console.log('harvesting Film1 data');
   var before = new Date();
-  var movies = getList()
-    .wait();
-    // .filter(function(m) {return m.nowAvailable;});
-  movies.forEach(function(m) { m._id = 'film1_' + m.fid; });
+  var movies = getList();
   var after = new Date() - before;
-  console.log(movies.length + ' available on demand');
   console.log('\t' + (after/1000).toFixed(1) + 's');
+  console.log(movies.length + ' available on demand');
+  //console.log(movies);
 
-  var futures = movies.map(function(movie){
-      // var doc = Movies.findOne('film1_' + movie.fid);
-      // if (doc) return;
+  var ids = _.pluck(movies, '_id');
+  var newMovies = _.difference(ids, existing);
+  var oldMovies = _.difference(existing, ids);
 
-      movie._id = 'film1_' + movie.fid;
+  // only new movies need to be harvested
+  movies = movies.filter(function(m){ return newMovies.indexOf(m._id) > -1; });
+  console.log(movies.length + ' new movies to be harvested');
 
-      return getDetailsFut(movie);
-  });
 
+  var futures = movies.map(getDetailsFut);
   Future.wait.apply(null, futures);
+
   after = new Date() - before;
   console.log('\t' + (after/1000).toFixed(1) + 's');
 
-  var gone = existing.filter(function(oldId) {
-    return !_.find(movies, function(movie) { return movie._id == oldId; } );
-  });
+  if (oldMovies.length) {
+    console.log('removing ' + oldMovies.length + ' movies no longer available:');
 
-  if (gone.length) {
-    console.log('removing ' + gone.length + ' movies no longer available:');
-
-    gone.forEach(function(oldId) {
-      console.log(oldId, Movies.findOne(oldId).title);
+    oldMovies.forEach(function(oldId) {
+      console.log(Movies.findOne(oldId).title);
       Movies.remove(oldId);
     });
   }
@@ -104,31 +100,26 @@ function _movie(index, li) {
       fid : idparts[1] ,
       cover : $li.find('a.hover-over img').attr('src'),
       url : $li.find('a.hover-over').attr('href'),
-      // title: $li.find('h3 a').text(),
       when : when,
-      nowAvailable : nowAvailable,
+      nowAvailable : nowAvailable
   };
 }
-function getList(fun) {
-  HTTP.get('http://www.film1.nl/film_kijken/film1_on_demand/', function(err, res) {
-    if( err) {
-        console.error(err);
-        return fun(err);
-    }
-    $ = cheerio.load(res.content);
+function getList() {
+  var res = HTTP.get('http://www.film1.nl/film_kijken/film1_on_demand/');
+  $ = cheerio.load(res.content);
 
-    var allMovies = $('.listview').eq(1); // the first listview contains only new titles
-    var rows = allMovies
-        .children('.premiere').get();
+  var allMovies = $('.listview').eq(1); // the first listview contains only new titles
+  var rows = allMovies
+      .children('.premiere').get();
 
-    var flat = rows.reduce(function(acc, cur) {
-        return acc.concat( $(cur).children('li').map(_movie).get() );
-    }, []);
-    fun(undefined, flat);
-  });
+  var flat = rows.reduce(function(acc, cur) {
+      return acc.concat( $(cur).children('li').map(_movie).get() );
+  }, []);
+
+  flat.forEach(function(m) { m._id = 'film1_' + m.fid; });
+  return flat;
 }
 
-var getList = Future.wrap(getList);
 
 function getDetails1(movie, fun) {
   var movieId = movie.fid;
@@ -209,7 +200,7 @@ var getDetailsFut = function (movie) {
   var details2 = f2.wait();
 
   var details = _.extend(movie, details1, details2);
-  console.log(movie._id,movie.title);
+  console.log(movie.title);
   Movies.upsert(movie._id, details );
 }.future();
 
@@ -248,7 +239,7 @@ MapKijkWijzer = function(icons) {
     });
   }
   return kijkwijzer;
-}
+};
 
 Kijkwijzer = function kijkwijzer() {
   console.log('kijkwijzer conversion')
@@ -261,4 +252,4 @@ Kijkwijzer = function kijkwijzer() {
     }});
 
   });
-}
+};
