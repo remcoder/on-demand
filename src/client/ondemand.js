@@ -46,13 +46,16 @@ Meteor.startup(function() {
   Tracker.autorun(function(c) {
     if (this.preloadingFinished.get()) {
       phase('subscribing');
-      Meteor.subscribe('movies', function() {
+      Meteor.subscribe('topmovies', function() {
         moviesLoaded.set(true);
         phase('movies ready');
-      });
-      Meteor.subscribe('harvest', function() {});
-      Meteor.subscribe('genres');
+        Meteor.setTimeout(function(){
+          Meteor.subscribe('movies');
 
+        },300);
+      });
+      //Meteor.subscribe('harvest', function() {});
+      //Meteor.subscribe('genres');
     }
   });
 
