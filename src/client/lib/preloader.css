@@ -1,0 +1,8 @@
+.preloader {
+  position: absolute;
+  visibility:hidden;
+}
+
+.font.preloader::after {
+  content: '\E101';
+}

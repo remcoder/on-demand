@@ -44,7 +44,7 @@ Meteor.startup(function() {
   phase('startup');
 
   Tracker.autorun(function(c) {
-    if (firstPaint.get()) {
+    if (this.preloadingFinished.get()) {
       phase('subscribing');
       Meteor.subscribe('movies', function() {
         moviesLoaded.set(true);
@@ -118,8 +118,8 @@ Template.movieList.helpers({
 
 
     hasMovies: function() {
-      if (!firstPaint.get())
-        return false;
+      //if (!firstPaint.get())
+      //  return false;
 
       if (moviesLoaded.get())
         return true;
