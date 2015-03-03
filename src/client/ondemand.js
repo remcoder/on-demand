@@ -27,6 +27,7 @@ if(Meteor.isCordova){
 if (Meteor.isCordova)
   // open links in InAppBrowser
   $(document).on('click', 'a[target=_blank]', function(evt) {
+    GAnalytics.event("main", "trailer",evt.currentTarget.href);
       window.open(evt.currentTarget.href, '_blank', 'location=yes');
       evt.preventDefault();
   });
