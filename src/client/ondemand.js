@@ -1,6 +1,5 @@
 var json, localMovies;
 var _timestamp = new Date();
-var firstPaint = new ReactiveVar(false);
 var moviesLoaded = new ReactiveVar(false);
 
 moment.locale('nl');
@@ -12,56 +11,51 @@ function phase(label) {
 
 phase('init');
 
-// suspend app when back button is pressed
-if(Meteor.isCordova){
-  Meteor.startup(function(){
-    Tracker.autorun(function(c) {
-      if (moviesLoaded.get()) {
-        GAnalytics.pageview("/main/startup");
-      }
-    });
-    document.addEventListener("backbutton", function () {
-      window.plugins.Suspend.suspendApp();
-    });
-    document.addEventListener("resume", function () {
-      //console.log('resume!');
-      GAnalytics.pageview("/main/resume");
-    });
-  });
-}
+Tracker.autorun(function() {
+  if (preloadingFinished.get()) {
+    phase('subscribing');
 
-if (Meteor.isCordova)
-  // open links in InAppBrowser
-  $(document).on('click', 'a[target=_blank]', function(evt) {
-    GAnalytics.event("main", "trailer",evt.currentTarget.href);
-      window.open(evt.currentTarget.href, '_blank', 'location=yes');
-      evt.preventDefault();
-  });
+    Meteor.subscribe('topmovies', function () {
+      moviesLoaded.set(true);
+      phase('top movies ready');
+      Meteor.defer(function () {
+        Meteor.subscribe('movies');
+      });
+    });
+  }
+});
 
 
-Meteor.startup(function() {
-  $(window).scroll(_.throttle(function(evt) {
+Tracker.autorun(function () {
+  if (!moviesLoaded.get())
+    return;
+
+  GAnalytics.pageview("/main/startup");
+
+  $(window).scroll(_.throttle(function() {
     //console.log('scroll');
     GAnalytics.event("main","scroll");
   }, 10000));
 
-  phase('startup');
+  if (!Meteor.isCordova)
+    return;
 
-  Tracker.autorun(function(c) {
-    if (this.preloadingFinished.get()) {
-      phase('subscribing');
-
-      Meteor.subscribe('topmovies', function () {
-        moviesLoaded.set(true);
-        phase('top movies ready');
-        Meteor.defer(function () {
-          Meteor.subscribe('movies');
-        });
-      });
-    }
+  // open links in InAppBrowser
+  $(document).on('click', 'a[target=_blank]', function (evt) {
+    GAnalytics.event("main", "trailer", evt.currentTarget.href);
+    window.open(evt.currentTarget.href, '_blank', 'location=yes');
+    evt.preventDefault();
   });
 
+  document.addEventListener("backbutton", function () {
+    window.plugins.Suspend.suspendApp();
+  });
+  document.addEventListener("resume", function () {
+    //console.log('resume!');
+    GAnalytics.pageview("/main/resume");
+  });
 });
+
 
 Template.movieList.rendered = function() {
   var count = 0;
@@ -73,29 +67,28 @@ Template.movieList.rendered = function() {
 
 
 Template.movieList.helpers({
-    movies: function() {
-
-        if (!moviesLoaded.get()) {
-          //phase('using movies from localstorage or default')
-          return [];
-        }
-
-        phase('got new movies from server');
-        var movies = Movies.find({}, {
-            sort: [ ['imdb.rating', 'desc'], 'title']
-        }).fetch();
-
-        phase('sorted '+movies.length+' movies');
-        // console.log('storing new movies in localstorage')
-        //localStorage.setItem('movies', JSON.stringify(movies.slice(0,10) ));
-
-        return movies;
-    },
-
-
-    hasMovies: function() {
-      return moviesLoaded.get();
+  movies: function() {
+    if (!moviesLoaded.get()) {
+      //phase('using movies from localstorage or default')
+      return [];
     }
+
+    phase('got new movies from server');
+    var movies = Movies.find({}, {
+        sort: [ ['imdb.rating', 'desc'], 'title']
+    }).fetch();
+
+    phase('sorted '+movies.length+' movies');
+    // console.log('storing new movies in localstorage')
+    //localStorage.setItem('movies', JSON.stringify(movies.slice(0,10) ));
+
+    return movies;
+  },
+
+
+  hasMovies: function() {
+    return moviesLoaded.get();
+  }
 });
 
 Template.movieItem.helpers({
