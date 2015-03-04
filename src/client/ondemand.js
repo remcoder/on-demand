@@ -50,16 +50,14 @@ Meteor.startup(function() {
   Tracker.autorun(function(c) {
     if (this.preloadingFinished.get()) {
       phase('subscribing');
-      Meteor.subscribe('topmovies', function() {
-        moviesLoaded.set(true);
-        phase('movies ready');
-        Meteor.setTimeout(function(){
-          Meteor.subscribe('movies');
 
-        },300);
+      Meteor.subscribe('topmovies', function () {
+        moviesLoaded.set(true);
+        phase('top movies ready');
+        Meteor.defer(function () {
+          Meteor.subscribe('movies');
+        });
       });
-      //Meteor.subscribe('harvest', function() {});
-      //Meteor.subscribe('genres');
     }
   });
 
@@ -69,60 +67,34 @@ Template.movieList.rendered = function() {
   var count = 0;
   this.autorun(function() {
     count++;
-    if (count == 1)
-      setTimeout(function() {
-        firstPaint.set(true);
-      },100);
-
-    phase('render ' + count + ', ' + Movies.find().count() + ' movies loaded');
+    phase('render #' + count + ', ' + Movies.find().count() + ' movies');
   });
-}
-
-
+};
 
 
 Template.movieList.helpers({
     movies: function() {
 
         if (!moviesLoaded.get()) {
-          phase('using movies from localstorage or default')
-          return localMovies;
+          //phase('using movies from localstorage or default')
+          return [];
         }
 
-        var filter = {};
-        var genres = Genres.find({}).fetch()
-          .filter(function(g) {
-          return Session.get('genre-'+g.name);
-        }).map(function(g) {
-          return g.name;
-        });
-
-        if (genres.length)
-          _.extend(filter, { 'genres.name': { $in: genres} });
-
-        var fullTextSearch = Session.get('fullTextSearch');
-        if (fullTextSearch)
-            _.extend(filter, { title: new RegExp(fullTextSearch,'i') });
-        var movies = Movies.find(filter, {
+        phase('got new movies from server');
+        var movies = Movies.find({}, {
             sort: [ ['imdb.rating', 'desc'], 'title']
         }).fetch();
 
-        phase('got movies '+movies.length+' from server');
+        phase('sorted '+movies.length+' movies');
         // console.log('storing new movies in localstorage')
-        localStorage.setItem('movies', JSON.stringify(movies.slice(0,10) ));
+        //localStorage.setItem('movies', JSON.stringify(movies.slice(0,10) ));
 
         return movies;
     },
 
 
     hasMovies: function() {
-      //if (!firstPaint.get())
-      //  return false;
-
-      if (moviesLoaded.get())
-        return true;
-
-      return localMovies && localMovies.length;
+      return moviesLoaded.get();
     }
 });
 
