@@ -6,88 +6,30 @@
 </head>
 
 <body>
-  {{> preloader }}
-  {{> movieList}}
+{{> preloader }}
+{{> movieList}}
 </body>
 
-<template name="fullTextSearch">
-  <form class="navbar-form navbar-left" role="search">
-    <div class="form-group">
-      <input type=search
-        class="form-control"
-        incremental="{{#if incremental}}incremental{{/if}}"
-        autofocus
-        placeholder="zoek op titel"
-        value="{{value}}" />
-    </div>
-  </form>
-</template>
-
-<template name="genres">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    {{dropdownTitle}}
-    <strong class="caret"></strong>
-  </a>
-  <div class="dropdown-menu genres">
-    <button data-action="reset" class="btn btn-danger btn-block btn-xs">
-      reset
-    </button>
-    {{#each genres}}
-      <button data-action="select-genre" class="btn btn-primary btn-block btn-xs {{#if isSelected . }}btn-warning{{/if}}">
-        {{name}}
-      </button>
-    {{/each}}
-  </div>
-</template>
-
-<template name="status">
-  <div class="nav navbar-nav navbar-info">
-    {{#if moviesLoaded}}
-      <span class="badge badge-default">{{count movies}} films</span>
-    {{else}}
-      <span class="badge badge-default pulse">laden..</span>
-    {{/if}}
-
-    {{#with harvest}}
-      {{#if finished}}
-        <span>laatste update <span class="badge badge-default">{{lastUpdated .}}</span></span>
-      {{else}}
-        <span class="badge badge-danger pulse">nu aan het updaten</span>
-      {{/if}}
-    {{/with}}
-  </div>
-</template>
-
 <template name="movieList">
-{{#with movies}}
-  <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <i class="glyphicon glyphicon-info-sign"></i>
-      </button>
-      <span class="navbar-brand" href="#"><span class="badge badge-danger">Film1</span> On Demand
-
-        <span class="navbar-brand-ext">
-
+  {{#with movies}}
+    <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <i class="glyphicon glyphicon-info-sign"></i>
+        </button>
+        <span class="navbar-brand" href="#"><span class="badge badge-danger">Film1</span> On Demand
+          <span class="navbar-brand-ext"></span>
         </span>
-      </span>
-    </div>
+      </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <p class="info">
-        'Film1' en 'Film1 On Demand' zijn merken van Liberty Global Content Netherlands B.V.<br>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <p class="info">
+          'Film1' en 'Film1 On Demand' zijn merken van Liberty Global Content Netherlands B.V.<br>
 
-        Deze app is niet gemaakt door of in opdracht van Liberty Global Content Netherlands B.V.<br> Zoekt u de <a href="https://play.google.com/store/apps/details?id=nl.chellomedia.film1&amp;hl=nl">officiële app van Film1</a>?
-      </p>
-      <!-- {{> status }}
-      {{> fullTextSearch }}
-
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
-          {{> genres}}
-        </li>
-      </ul>
- -->
+          Deze app is niet gemaakt door of in opdracht van Liberty Global Content Netherlands B.V.<br> Zoekt u de <a
+          href="https://play.google.com/store/apps/details?id=nl.chellomedia.film1&amp;hl=nl">officiële app van
+          Film1</a>?
+        </p>
       </div>
     </nav>
 
