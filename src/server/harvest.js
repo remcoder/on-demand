@@ -119,8 +119,26 @@ function getList() {
       return acc.concat( $(cur).children('li').map(_movie).get() );
   }, []);
 
-  flat.forEach(function(m) { m._id = 'film1_' + m.fid; });
-  return flat;
+  var unique = {};
+  var deduped = flat.filter(function(m) {
+    m._id = 'film1_' + m.fid;
+
+    //Duplicates probably occur b/c different availabilities.
+    //For now we're only interested in what's available now
+    if (m._id in unique) {
+      if (m.nowAvailable || unique[m._id].nowAvailable)
+        unique[m._id].nowAvailable = true;
+
+      console.log('skipping dupe:', m.url)
+      return false;
+    }
+
+    unique[m._id] = m;
+    return true;
+
+  });
+
+  return deduped;
 }
 
 
