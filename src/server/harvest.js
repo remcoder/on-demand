@@ -48,14 +48,14 @@ function needsUpdate() {
   return false;
 }
 
-var harvestFilm1 = function () {
+var harvestFilm1 = function (force) {
   Harvest.upsert('singleton', {
     started   : new Date(),
     finished  : null,
     timestamp : new Date()
   });
 
-  var existing = Movies.find().map(function(movie) { return movie._id; });
+  var existing = force ? [] : Movies.find().map(function(movie) { return movie._id; });
 
   console.log('harvesting Film1 data');
   var before = new Date();
