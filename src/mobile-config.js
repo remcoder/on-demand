@@ -25,3 +25,5 @@ App.launchScreens({
   android_xhdpi_portrait : 'resources/splash/splash-dark-720x1280.png',
   android_xhdpi_landscape : ''
 });
+
+App.accessRule('http://www.film1.nl/*');
