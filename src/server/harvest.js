@@ -154,7 +154,6 @@ var getDetails1 = function (movie) {
   $ = cheerio.load(res.data.html_hoverover);
   var details = {
       duration : $('.duration').text(),
-      trailer : $('.movie-trailer').attr('href'),
       icons : $('.info li img')
           .map(function(i, el) { return $(el).attr('src'); })
           .get(),

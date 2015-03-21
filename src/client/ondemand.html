@@ -53,7 +53,7 @@
     </div>
 
     <div class="col-md-5 col-xs-6 column">
-      <p class="xtext-center">
+      <p>
         <img src="http://www.film1.nl/{{cover}}"/>
       </p>
     </div>
@@ -84,11 +84,11 @@
         {{/each}}
       </div>
 
-      {{#if trailer}}
-        <a class="btn btn-default btn-xs" target="_blank" href="http://www.film1.nl/{{trailer}}">
-          <span class="glyphicon glyphicon-facetime-video"></span>trailer
+      {{#with trailer}}
+        <a class="btn btn-default btn-xs" target="_system" href="{{.}}">
+          bekijk de trailer <span class="glyphicon glyphicon-right glyphicon-new-window"></span>
         </a>
-      {{/if}}
+      {{/with}}
       </p>
     </div>
 

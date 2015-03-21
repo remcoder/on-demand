@@ -41,9 +41,9 @@ Tracker.autorun(function () {
     return;
 
   // open links in InAppBrowser
-  $(document).on('click', 'a[target=_blank]', function (evt) {
+  $(document).on('click', 'a[target=_system]', function (evt) {
     GAnalytics.event("main", "trailer", evt.currentTarget.href);
-    window.open(evt.currentTarget.href, '_blank', 'location=yes');
+    window.open(evt.currentTarget.href, '_system');
     evt.preventDefault();
   });
 
@@ -96,5 +96,8 @@ Template.movieItem.helpers({
       // console.log(s);
       if (!s) return '?';
       return +s.split(' ')[0];
-    }
+    },
+  trailer : function() {
+    return 'http://www.film1.nl/films/trailer.php?id=' + this.fid;
+  }
 });
