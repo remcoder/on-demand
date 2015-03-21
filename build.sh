@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo "Did you change the version?"
 read -n1 -r -p "Press any key to continue..."
 
