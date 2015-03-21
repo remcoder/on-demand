@@ -53,7 +53,15 @@
     </div>
 
     <div class="col-md-5 col-xs-6 column">
-      <p>
+
+      <p style="position: relative; overflow: hidden;">
+      {{#if lastChance}}
+        <span class="movie-special-badge badge badge-last-chance">laatste kans</span>
+      {{/if}}
+      {{#if new}}
+        <span class="movie-special-badge badge badge-new">nieuw</span>
+      {{/if}}
+
         <img src="http://www.film1.nl/{{cover}}"/>
       </p>
     </div>
@@ -65,6 +73,8 @@
           <span class="badge badge-danger">{{imdb.rating}}</span> op IMDB
         </div>
       {{/if}}
+
+
 
       <div>
         {{#each genres}}

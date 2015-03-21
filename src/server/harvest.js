@@ -183,7 +183,7 @@ var getDetails2 = function (movie) {
   var genres = $('.tab-tbl-title:contains(Genre)').next().children('a').map(function(i,el) {
       return {
           name: $(el).text(),
-          url: $(el).attr('href'),
+          url: $(el).attr('href')
       };
   }).get();
 
@@ -195,8 +195,15 @@ var getDetails2 = function (movie) {
       }
   });
 
+  var availabilityString = $('.sidebar-content li:nth-child(2)').text();
+  var availability = availabilityString.match(/van (.*) tot (.*)./).slice(1);
+  var availableFrom = moment(availability[0], 'D MMMM YYYY').toDate();
+  var availableTo = moment(availability[1], 'D MMMM YYYY').toDate();
+
   return {
-      genres: genres
+    availableFrom : availableFrom,
+    availableTo : availableTo,
+    genres: genres
   };
 }.future();
 

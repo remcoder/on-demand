@@ -15,10 +15,27 @@
       height: 212px;
     }
 
+    .movie-special-badge {
+      position: absolute;
+      transform: rotateZ(-45deg);
+      left: -22px;
+      top: 19px;
+      padding: 2px 17px 3px 17px;
+      font-size: 12px;
+      text-align: center;
+      border-radius: 0;
+      box-sizing: border-box;
+      width: 100px;
+      &.badge-new {
+
+      }
+    }
+
     .movie-info {
       .movie-info-item {
         margin-bottom: 10px;
       }
+
     }
 
     p.desc {
@@ -48,6 +65,13 @@
 
 .badge-danger {
   background-color:  #A52323;
+}
+
+.badge-last-chance {
+  background-color: #A5239E;
+}
+.badge-new {
+  background-color: #23A525;
 }
 
 a.btn-xs > .glyphicon {

@@ -1,6 +1,8 @@
 'use strict';
 
+
 Meteor.startup(function() {
+  moment.locale('nl');
 
   Harvest.autoUpdate();
 

@@ -85,13 +85,26 @@ Template.movieList.helpers({
     return movies;
   },
 
-
   hasMovies: function() {
     return moviesLoaded.get();
   }
 });
 
 Template.movieItem.helpers({
+  lastChance : function() {
+    if (!this.nowAvailable) return false;
+
+    var nextWeek = moment().add(7, 'days');
+    var end = moment(this.availableTo);
+    return end.isBefore(nextWeek);
+  },
+  new: function() {
+    if (!this.nowAvailable) return false;
+
+    var aWeekAgo = moment().subtract(7, 'days');
+    var premiere = moment(this.availableFrom);
+    return premiere.isAfter(aWeekAgo);
+  },
   formatDuration: function(s) {
       // console.log(s);
       if (!s) return '?';
@@ -99,5 +112,8 @@ Template.movieItem.helpers({
     },
   trailer : function() {
     return 'http://www.film1.nl/films/trailer.php?id=' + this.fid;
+  },
+  period : function() {
+    return 'Te zien van ' + moment(this.availableFrom).format('D MMMM') + ' tot ' + moment(this.availableTo).format('D MMMM') + '.';
   }
 });
