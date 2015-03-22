@@ -94,11 +94,11 @@
         {{/each}}
       </div>
 
-      {{#with trailer}}
-        <a class="btn btn-default btn-xs" target="_system" href="{{.}}">
+      {{#if hasTrailer}}
+        <a class="btn btn-default btn-xs" target="_system" href="{{trailer}}">
           bekijk de trailer <span class="glyphicon glyphicon-right glyphicon-new-window"></span>
         </a>
-      {{/with}}
+      {{/if}}
       </p>
     </div>
 

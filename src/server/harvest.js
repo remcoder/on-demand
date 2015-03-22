@@ -222,10 +222,14 @@ var getDetails2 = function (movie) {
   var availableFrom = moment(availability[0], 'D MMMM YYYY').toDate();
   var availableTo = moment(availability[1], 'D MMMM YYYY').toDate();
 
+  var trailer = $('.trailer_carousel li').get();
+  var hasTrailer = !!trailer.length;
+
   return {
     availableFrom : availableFrom,
     availableTo : availableTo,
-    genres: genres
+    genres: genres,
+    hasTrailer : hasTrailer
   };
 }.future();
 
