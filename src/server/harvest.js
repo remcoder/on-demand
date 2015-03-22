@@ -94,6 +94,28 @@ var harvestFilm1 = function (force) {
   });
 }.future();
 
+var harvestSpecificFilm1 = function (ids) {
+
+  console.log('harvesting Film1 data');
+  var before = new Date();
+  var movies = getList();
+  var after = new Date() - before;
+  console.log('\t' + (after/1000).toFixed(1) + 's');
+  console.log(movies.length + ' available on demand');
+  //console.log(movies);
+
+  // only movies need to be harvested
+  movies = movies.filter(function(m){ return ids.indexOf(m._id) > -1; });
+  console.log(movies.length + ' movies to be harvested');
+
+  var futures = movies.map(getDetailsFut);
+  Future.waitAll(futures);
+
+  after = new Date() - before;
+  console.log('\t' + (after/1000).toFixed(1) + 's');
+
+}.future();
+
 function _movie(index, li) {
   var $li = $(li);
   var idparts = $li.find('a.hover-over').attr('id').split('_');
@@ -223,6 +245,7 @@ var getDetailsFut = function (movie) {
 
 var exports = {
   harvestFilm1 : harvestFilm1,
+  harvestSpecificFilm1 : harvestSpecificFilm1,
   needsUpdate : needsUpdate,
   autoUpdate : autoUpdate,
   kijkwijzerConversion: kijkwijzerConversion
