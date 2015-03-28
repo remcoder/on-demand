@@ -120,15 +120,18 @@ function _movie(index, li) {
   var $li = $(li);
   var idparts = $li.find('a.hover-over').attr('id').split('_');
   var when = $li.find('h3 + span').text().trim();
+  var year = $li.find('h3 a').text().match(/\(\d\d\d\d\)/)[0].slice(1,5);
   var nowAvailable = when.toLowerCase() == 'nu te zien';
   return {
-      fid : idparts[1] ,
       cover : $li.find('a.hover-over img').attr('src'),
+      fid : idparts[1],
+      nowAvailable : nowAvailable,
       url : $li.find('a.hover-over').attr('href'),
       when : when,
-      nowAvailable : nowAvailable
+      year: year
   };
 }
+
 function getList() {
   var res = HTTP.get('http://www.film1.nl/film_kijken/film1_on_demand/');
   $ = cheerio.load(res.content);
