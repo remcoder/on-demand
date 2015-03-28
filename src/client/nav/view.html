@@ -1,0 +1,34 @@
+<template name="nav">
+  <div class="slide-panel {{slidePanelState}}" id="slide-panel-1">
+    <p class="info">
+      'Film1' en 'Film1 On Demand' zijn merken van Liberty Global Content Netherlands B.V.<br>
+
+      Deze app is niet gemaakt door of in opdracht van Liberty Global Content Netherlands B.V.<br> Zoekt u de <a
+      href="https://play.google.com/store/apps/details?id=nl.chellomedia.film1&amp;hl=nl">officiële app van
+      Film1</a>?
+    </p>
+  </div>
+  <nav class="title-bar" role="navigation">
+    <div class="title-bar-content {{spinnerState}}">
+      <div class="app-title-container">
+
+        <div class="app-title" href="#">
+          <div class="app-title-left">
+            <span class="badge badge-danger">Film1</span> <span>On Demand</span>
+            <span class="navbar-brand-ext"></span>
+          </div>
+
+          <div class="app-title-right">
+            <button type="button" class="btn btn-xs menu-toggle" data-toggle="slide-panel" tabindex="-1">
+              <i class="glyphicon glyphicon-info-sign"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {{> spinner}}
+
+    </div>
+  </nav>
+</template>

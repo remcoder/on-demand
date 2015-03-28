@@ -28,7 +28,6 @@ meteorhacks:async@1.0.0
 meteorhacks:npm@1.2.2
 minifiers@1.1.4
 minimongo@1.0.7
-mizzao:bootstrap-3@3.3.1_1
 mobile-status-bar@1.0.3
 mongo@1.1.0
 npm-container@1.0.0
@@ -41,12 +40,14 @@ reload@1.1.3
 remcoder:chronos@0.2.2
 retry@1.0.3
 routepolicy@1.0.5
+sacha:spin@2.0.4
 session@1.1.0
 spacebars@1.0.6
 spacebars-compiler@1.0.5
 stylus@1.0.7
 templating@1.1.0
 tracker@1.0.6
+twbs:bootstrap@3.3.4
 ui@1.0.6
 underscore@1.0.3
 url@1.0.4

@@ -1,13 +1,21 @@
 var json, localMovies;
 var _timestamp = new Date();
-var moviesLoaded = new ReactiveVar(false);
+var topMoviesLoaded = new ReactiveVar(false);
 
 moment.locale('nl');
-Template.registerHelper('moviesLoaded', function() { return moviesLoaded.get(); });
+Template.registerHelper('moviesLoaded', function() { return topMoviesLoaded.get(); });
 
 function phase(label) {
   console.log( ((new Date() - _timestamp)/1000).toFixed(1) + 's ' + label);
 }
+
+Meteor.Spinner.options = {
+  color: '#fff', // #rgb or #rrggbb
+  hwaccel: true, // Whether to use hardware acceleration
+  length: 10,
+  width: 4,
+  trail: 50
+};
 
 phase('init');
 
@@ -16,10 +24,12 @@ Tracker.autorun(function() {
     phase('subscribing');
 
     Meteor.subscribe('topmovies', function () {
-      moviesLoaded.set(true);
+      topMoviesLoaded.set(true);
       phase('top movies ready');
       Meteor.defer(function () {
-        Meteor.subscribe('movies');
+        Meteor.subscribe('movies', function() {
+          Session.set('allMoviesLoaded', true);
+        });
       });
     });
   }
@@ -27,7 +37,7 @@ Tracker.autorun(function() {
 
 
 Tracker.autorun(function () {
-  if (!moviesLoaded.get())
+  if (!topMoviesLoaded.get())
     return;
 
   GAnalytics.pageview("/main/startup");
@@ -68,7 +78,7 @@ Template.movieList.rendered = function() {
 
 Template.movieList.helpers({
   movies: function() {
-    if (!moviesLoaded.get()) {
+    if (!topMoviesLoaded.get()) {
       //phase('using movies from localstorage or default')
       return [];
     }
@@ -86,7 +96,7 @@ Template.movieList.helpers({
   },
 
   hasMovies: function() {
-    return moviesLoaded.get();
+    return topMoviesLoaded.get();
   }
 });
 

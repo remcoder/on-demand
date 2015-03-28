@@ -11,9 +11,11 @@ meteorhacks:npm
 npm-container
 underscore
 jeeeyul:moment-with-langs
-mizzao:bootstrap-3
 stylus
 reactive-var
 remcoder:chronos
 
 datariot:ganalytics
+sacha:spin
+twbs:bootstrap
+fastclick
