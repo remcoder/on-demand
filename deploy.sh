@@ -7,6 +7,6 @@ if [ -z "$1" ]
   exit 1
  fi
 
-npm version $1
+npm version $1 || exit 1
 cd src
 meteor deploy ondemand --settings production.json
