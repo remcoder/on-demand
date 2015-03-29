@@ -33,18 +33,21 @@
         {{title}}</h3>
     </div>
 
-    <div class="col-md-5 col-xs-6 column cover-column">
+    <div class="col-md-6 col-xs-6 column cover-column">
 
-      <p style="position: relative; overflow: hidden;">
-        {{#if lastChance}}
-          <span class="movie-special-badge badge badge-last-chance">laatste week</span>
-        {{/if}}
-        {{#if new}}
-          <span class="movie-special-badge badge badge-new">nieuw</span>
-        {{/if}}
+      <p>
+        <div class="cover-wrapper">
+          {{#if lastChance}}
+            <span class="movie-special-badge badge badge-last-chance">laatste week</span>
+          {{/if}}
+          {{#if new}}
+            <span class="movie-special-badge badge badge-new">nieuw</span>
+          {{/if}}
 
-        <img src="http://www.film1.nl/{{cover}}"/>
+          <img src="http://www.film1.nl/{{cover}}"/>
+        </div>
         {{#if hasTrailer}}
+          <br/>
           <a class="btn btn-default btn-xs" target="_system" href="{{trailer}}">
             bekijk de trailer <span class="glyphicon glyphicon-right glyphicon-new-window"></span>
           </a>
@@ -52,7 +55,7 @@
       </p>
     </div>
 
-    <div class="col-md-5 col-xs-6 column">
+    <div class="col-md-6 col-xs-6 column">
     <p class="movie-info">
       {{#if imdb.rating}}
         <div class="movie-info-item">
