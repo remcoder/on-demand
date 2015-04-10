@@ -1,3 +1,4 @@
+@import 'lib/mixins'
 
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -135,7 +136,7 @@ icon-size = 25px
   width: icon-size;
   height: icon-size;
   display: inline-block;
-  -webkit-filter: invert(100%);
+  filter: invert(100%);
   background-size: icon-size;
   &.sprite_6  { background-position: 0 0; }
   &.sprite_9  { background-position: 0 -1 * icon-size; }
@@ -149,8 +150,3 @@ icon-size = 25px
   &.sprite_S  { background-position: 0 -9 * icon-size; }
   &.sprite_T  { background-position: 0 -10 * icon-size; }
 }
-
-
-
-
-

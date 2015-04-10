@@ -1,3 +1,4 @@
+@import '../lib/mixins'
 
 title-bar-height = 50px;
 
@@ -12,7 +13,7 @@ title-bar-height = 50px;
 
   .title-bar-content {
     height: 2 * title-bar-height;
-    -webkit-transition: transform .2s ease-out;
+    transition: transform .2s ease-out;
     transform : translateY(0);
     &.spinning {
       transform : translateY(- title-bar-height);
