@@ -27,6 +27,7 @@ Tracker.autorun(function() {
 
     if (Session.get('allMoviesLoaded'))
       Meteor.subscribe('movies', new Date(), function() {
+        Session.set('topMoviesLoaded', true);
         console.log('re-sub done');
       });
     else
