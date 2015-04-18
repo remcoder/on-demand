@@ -10,10 +10,20 @@ Template.nav.helpers({
   }
 });
 
+var taps = 0;
 Template.nav.events({
-  'touchstart button[data-toggle=slide-panel]' : function(evt) {
+  'click button[data-toggle=slide-panel]' : function(evt) {
     evt.preventDefault();
     var state = Session.get('slide-panel-state');
     Session.set('slide-panel-state', state == 'down' ? 'up' : 'down' );
+  },
+
+  'click .app-title-left' : function(evt) {
+    taps++;
+    if (taps == 10)
+    {
+      taps = 0;
+      alert(Meteor.release);
+    }
   }
 });
