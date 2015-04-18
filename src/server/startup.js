@@ -10,7 +10,7 @@ Meteor.startup(function() {
   Meteor.publish('harvest', function() { return Harvest.find({}); });
   Meteor.publish('genres', function() { return Genres.find({}); });
 
-  Meteor.publish('topmovies', function() {
+  Meteor.publish('topmovies', function(dummy) {
     console.log('subscribe topmovies');
     return Movies.find({
       availableFrom : { $lt : new Date() },

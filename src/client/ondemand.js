@@ -25,19 +25,13 @@ Tracker.autorun(function() {
     phase('subscribing');
     Chronos.liveUpdate(1000 * 60 * 60 * 24); // re-subscribe every day to refresh
 
-    if (Session.get('allMoviesLoaded'))
-      Meteor.subscribe('movies', new Date(), function() {
-        Session.set('topMoviesLoaded', true);
-        console.log('re-sub done');
-      });
-    else
-      Meteor.subscribe('topmovies', function () {
+      Meteor.subscribe('topmovies', new Date(), function () {
         Session.set('topMoviesLoaded', true);
         phase('top movies ready');
 
         // allow time to render
         Meteor.defer(function () {
-          Meteor.subscribe('movies', function() {
+          Meteor.subscribe('movies', new Date(), function() {
             Session.set('allMoviesLoaded', true);
           });
         });
