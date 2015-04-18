@@ -1,9 +1,10 @@
 var json, localMovies;
 var _timestamp = new Date();
-var topMoviesLoaded = new ReactiveVar(false);
+Session.setDefault('topMoviesLoaded', false);
+Session.setDefault('allMoviesLoaded', false);
 
 moment.locale('nl');
-Template.registerHelper('moviesLoaded', function() { return topMoviesLoaded.get(); });
+//Template.registerHelper('moviesLoaded', function() { return topMoviesLoaded.get(); });
 
 function phase(label) {
   console.log( ((new Date() - _timestamp)/1000).toFixed(1) + 's ' + label);
@@ -22,22 +23,30 @@ phase('init');
 Tracker.autorun(function() {
   if (preloadingFinished.get()) {
     phase('subscribing');
+    Chronos.liveUpdate(1000 * 60 * 60 * 24); // re-subscribe every day to refresh
 
-    Meteor.subscribe('topmovies', function () {
-      topMoviesLoaded.set(true);
-      phase('top movies ready');
-      Meteor.defer(function () {
-        Meteor.subscribe('movies', function() {
-          Session.set('allMoviesLoaded', true);
+    if (Session.get('allMoviesLoaded'))
+      Meteor.subscribe('movies', new Date(), function() {
+        console.log('re-sub done');
+      });
+    else
+      Meteor.subscribe('topmovies', function () {
+        Session.set('topMoviesLoaded', true);
+        phase('top movies ready');
+
+        // allow time to render
+        Meteor.defer(function () {
+          Meteor.subscribe('movies', function() {
+            Session.set('allMoviesLoaded', true);
+          });
         });
       });
-    });
   }
 });
 
 
 Tracker.autorun(function () {
-  if (!topMoviesLoaded.get())
+  if (!Session.get('topMoviesLoaded'))
     return;
 
   GAnalytics.pageview("/main/startup");
@@ -78,7 +87,7 @@ Template.movieList.rendered = function() {
 
 Template.movieList.helpers({
   movies: function() {
-    if (!topMoviesLoaded.get()) {
+    if (!Session.get('topMoviesLoaded')) {
       //phase('using movies from localstorage or default')
       return [];
     }
@@ -96,7 +105,7 @@ Template.movieList.helpers({
   },
 
   hasMovies: function() {
-    return topMoviesLoaded.get();
+    return Session.get('topMoviesLoaded');
   }
 });
 

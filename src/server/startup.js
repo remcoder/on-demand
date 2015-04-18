@@ -11,10 +11,19 @@ Meteor.startup(function() {
   Meteor.publish('genres', function() { return Genres.find({}); });
 
   Meteor.publish('topmovies', function() {
-    return Movies.find({ nowAvailable : true }, { limit: 10, sort: { 'imdb.rating': -1 }});
+    console.log('subscribe topmovies');
+    return Movies.find({
+      availableFrom : { $lt : new Date() },
+      availableTo : { $gt : new Date() }
+    }, { limit: 10, sort: { 'imdb.rating': -1 }});
   });
 
-  Meteor.publish('movies', function() {
-    return Movies.find({ nowAvailable : true }, { sort: { 'imdb.rating': -1 }});
+
+  Meteor.publish('movies', function(dummy) {
+    console.log('subscribe movies');
+    return Movies.find({
+      availableFrom : { $lt : new Date() },
+      availableTo : { $gt : new Date() }
+    }, { sort: { 'imdb.rating': -1 }});
   });
 });
