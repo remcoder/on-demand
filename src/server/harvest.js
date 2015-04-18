@@ -105,7 +105,7 @@ var harvestSpecificFilm1 = function (ids) {
   //console.log(movies);
 
   // only movies need to be harvested
-  movies = movies.filter(function(m){ return ids.indexOf(m._id) > -1; });
+  movies = movies.filter(function(m){ return ids.indexOf(m.fid) > -1; });
   console.log(movies.length + ' movies to be harvested');
 
   var futures = movies.map(getDetailsFut);
@@ -121,11 +121,9 @@ function _movie(index, li) {
   var idparts = $li.find('a.hover-over').attr('id').split('_');
   var when = $li.find('h3 + span').text().trim();
   var year = $li.find('h3 a').text().match(/\(\d\d\d\d\)/)[0].slice(1,5);
-  var nowAvailable = when.toLowerCase() == 'nu te zien';
   return {
       cover : $li.find('a.hover-over img').attr('src'),
       fid : idparts[1],
-      nowAvailable : nowAvailable,
       url : $li.find('a.hover-over').attr('href'),
       when : when,
       year: year
@@ -144,26 +142,8 @@ function getList() {
       return acc.concat( $(cur).children('li').map(_movie).get() );
   }, []);
 
-  var unique = {};
-  var deduped = flat.filter(function(m) {
-    m._id = 'film1_' + m.fid;
-
-    //Duplicates probably occur b/c different availabilities.
-    //For now we're only interested in what's available now
-    if (m._id in unique) {
-      if (m.nowAvailable || unique[m._id].nowAvailable)
-        unique[m._id].nowAvailable = true;
-
-      console.log('skipping dupe:', m.url)
-      return false;
-    }
-
-    unique[m._id] = m;
-    return true;
-
-  });
-
-  return deduped;
+  // remove duplicates
+  return _.uniq(flat, false, function(m) { return m.fid; });
 }
 
 
