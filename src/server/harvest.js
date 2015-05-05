@@ -119,13 +119,11 @@ var harvestSpecificFilm1 = function (ids) {
 function _movie(index, li) {
   var $li = $(li);
   var idparts = $li.find('a.hover-over').attr('id').split('_');
-  var when = $li.find('h3 + span').text().trim();
   var year = $li.find('h3 a').text().match(/\(\d\d\d\d\)/)[0].slice(1,5);
   return {
       cover : $li.find('a.hover-over img').attr('src'),
       fid : idparts[1],
       url : $li.find('a.hover-over').attr('href'),
-      when : when,
       year: year
   };
 }
