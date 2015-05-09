@@ -24,6 +24,7 @@ function updateIfNeeded() {
 }
 
 function needsUpdate() {
+
   var harvest = Harvest.findOne('singleton');
   if (!harvest) {
       console.log('no previous harvest found');
@@ -37,11 +38,10 @@ function needsUpdate() {
     return true;
   }
 
-
-  // harvest 1x /day
-  var daysAgo = moment.duration(new Date() - harvest.timestamp).asDays();
-  if (daysAgo > 1) {
-    console.log('harvest is '+ daysAgo +' day(s) old');
+  // harvest 24x /day
+  var hours = moment.duration(new Date() - harvest.timestamp).asHours();
+  if (hours > 1) {
+    console.log('harvest is '+ hours +' hour(s) old');
     return true;
   }
 
@@ -49,50 +49,68 @@ function needsUpdate() {
 }
 
 var harvestFilm1 = function (force) {
+  console.log('harvesting Film1 data');
+
   Harvest.upsert('singleton', {
     started   : new Date(),
     finished  : null,
     timestamp : new Date()
   });
 
-  var existing = force ? [] : Movies.find().map(function(movie) { return movie._id; });
+  // remove all movies when forcing a new harvest
+  if (force === true)
+    Movies.remove({});
 
-  console.log('harvesting Film1 data');
-  var before = new Date();
   var movies = getList();
-  var after = new Date() - before;
-  console.log('\t' + (after/1000).toFixed(1) + 's');
-  console.log(movies.length + ' available on demand');
-  //console.log(movies);
 
-  var ids = _.pluck(movies, '_id');
-  var newMovies = _.difference(ids, existing);
-  var oldMovies = _.difference(existing, ids);
+  var idsInDb = Movies.find().map(function(movie) { return movie.fid; });
+  var idsFromSite = _.pluck(movies, 'fid');
 
-  // only new movies need to be harvested
-  movies = movies.filter(function(m){ return newMovies.indexOf(m._id) > -1; });
-  console.log(movies.length + ' new movies to be harvested');
-
-  var futures = movies.map(getDetailsFut);
+  // harvest new movies
+  var movieIdsToBeAdded = _.difference(idsFromSite, idsInDb);
+  var moviesToBeAdded = movies.filter(function(m) { return movieIdsToBeAdded.indexOf(m.fid) > -1; } );
+  console.log(moviesToBeAdded.length + ' new movies to be harvested');
+  var futures = moviesToBeAdded.map(getDetailsFut);
   Future.waitAll(futures);
 
-  after = new Date() - before;
-  console.log('\t' + (after/1000).toFixed(1) + 's');
+  var movieIdsToBeRemoved = _.difference(idsInDb, idsFromSite);
+  prune(movieIdsToBeRemoved);
 
-  if (oldMovies.length) {
-    console.log(oldMovies.length + ' movies will be removed because they are no longer available:');
-
-    oldMovies.forEach(function(oldId) {
-      console.log(Movies.findOne(oldId).title);
-      Movies.remove(oldId);
-    });
-  }
+  // re-harvest 16 movies > 24h old
+  reHarvest(16);
 
   Harvest.upsert('singleton', {
       finished: new Date(),
       timestamp: new Date()
   });
 }.future();
+
+// re-harvest N movies > 24h old
+function reHarvest(count) {
+
+  var yesterday = moment().subtract(1, 'days').toDate();
+  var moviesToBeHarvestedAgain = Movies.find({
+    //_id : { $in: movieIdsAlreadyPresent },  // this should not be necessary
+    lastModified: { $not:  { $gt: yesterday } }
+  }, {
+    limit: count
+  }).fetch();
+
+  var futures = moviesToBeHarvestedAgain.map(getDetailsFut);
+  Future.waitAll(futures);
+}
+
+function prune(movieIdsToBeRemoved) {
+  // delete movies that were removed from the website
+  if (movieIdsToBeRemoved.length) {
+    console.log(movieIdsToBeRemoved.length + ' movies will be removed because they are no longer available:');
+
+    movieIdsToBeRemoved.forEach(function(id) {
+      console.log(Movies.findOne(id).title);
+      Movies.remove(id);
+    });
+  }
+}
 
 var harvestSpecificFilm1 = function (ids) {
 
@@ -129,6 +147,7 @@ function _movie(index, li) {
 }
 
 function getList() {
+  console.time('get movie list');
   var res = HTTP.get('http://www.film1.nl/film_kijken/film1_on_demand/');
   $ = cheerio.load(res.content);
 
@@ -141,7 +160,10 @@ function getList() {
   }, []);
 
   // remove duplicates
-  return _.uniq(flat, false, function(m) { return m.fid; });
+  var deduped = _.uniq(flat, false, function(m) { return m.fid; });
+  console.timeEnd('get movie list');
+  console.log(deduped.length + ' available on demand');
+  return deduped;
 }
 
 
@@ -223,20 +245,31 @@ var getDetailsFut = function (movie) {
   var details1 = f1.wait();
   var details2 = f2.wait();
 
-  var details = _.extend(movie, details1, details2);
-  console.log(movie.title);
+  var details = _.extend(movie, details1, details2, {
+    lastModified: new Date()
+  });
+  console.log(movie.title, movie._id);
   Movies.upsert(movie._id, details );
 }.future();
 
-var exports = {
+
+_.extend(Harvest, {
+  getLiveMovieList : getList,
   harvestFilm1 : harvestFilm1,
   harvestSpecificFilm1 : harvestSpecificFilm1,
   needsUpdate : needsUpdate,
   autoUpdate : autoUpdate,
   kijkwijzerConversion: kijkwijzerConversion
-};
-Meteor.methods(exports);
-_.extend(Harvest, exports);
+});
+
+Meteor.methods({
+  harvestFilm1 : harvestFilm1,
+  harvestSpecificFilm1 : harvestSpecificFilm1,
+  needsUpdate : needsUpdate,
+  autoUpdate : autoUpdate,
+  kijkwijzerConversion: kijkwijzerConversion
+});
+
 
 var KijkwijzerMapping = {
   'leeftijd_6_small.gif' : 'sprite_6',
@@ -265,7 +298,7 @@ function mapKijkWijzer(icons) {
     });
   }
   return kijkwijzer;
-};
+}
 
 function kijkwijzerConversion() {
   console.log('one-off kijkwijzer conversion');
@@ -278,4 +311,4 @@ function kijkwijzerConversion() {
     }});
 
   });
-};
+}
