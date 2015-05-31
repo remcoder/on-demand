@@ -20,7 +20,7 @@ function autoUpdate() {
 
 function updateIfNeeded() {
   if (Harvest.needsUpdate())
-    Harvest.harvestFilm1();
+    Harvest.harvestFilm1(true); // force full update. for now
 }
 
 function needsUpdate() {
@@ -38,9 +38,9 @@ function needsUpdate() {
     return true;
   }
 
-  // harvest 24x /day
+  // harvest 1x /day
   var hours = moment.duration(new Date() - harvest.timestamp).asHours();
-  if (hours > 1) {
+  if (hours > 24) {
     console.log('harvest is '+ hours +' hour(s) old');
     return true;
   }
